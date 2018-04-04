@@ -16,7 +16,11 @@
 #define SAP_RAM_SIZE 16
 
 // Opcode Definitions:
-#define OPCODE_HLT 0xF
+#define OPCODE_MASK 0xF0
+#define OPERAND_MASK 0x0F
+
+#define OPCODE_HLT 0xF //Halt Instruction Flow
+#define OPCODE_LDA 0x0 //Load memory address into Accumulator
 
 // Struct for SAP-1:
 typedef struct sap1_state_t {
@@ -31,6 +35,9 @@ sap_state_t *init_sap_state(void);
 
 // Dump Memory:
 void dump_sap_memory(sap_state_t *sap_state);
+
+// Dump Structure State:
+void dump_sap_state(sap_state_t *sap_state);
 
 void execute_sap(sap_state_t *sap_state);
 #endif
