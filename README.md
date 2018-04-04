@@ -7,8 +7,8 @@ sap1-emu is a rough C emulation of a simple 8Bit computer design documented in *
 It was a pretty good exercise to gain an understanding how a *basic*, primitive computer functions. It was also an okay exercise in building something slightly non-trivial with C. Played a fair bit with generic Makefile features aswell to get it nice and scalable.
 
 ### Features:
-+ 8bit architecture (8bit Registers, 8Bit Memory Addressing)
-+ 16Bytes of RAM (Woo!)
++ 8bit architecture (8bit Registers, 8Bit Memory Sizes)
++ 16Bytes of RAM. 4 Bits of Addressing (Woo!)
 + 1 Register capable of adding and subtracting from memory. 2nd Register defined but yet unused.
 + 5 Fixed Length Opcodes (4bit Opcode, 4bit Operand). 
 + [Adding and Subtracting](https://www.youtube.com/watch?v=eSBybJGZoCU)
