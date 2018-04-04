@@ -21,6 +21,8 @@
 
 #define OPCODE_HLT 0xF //Halt Instruction Flow
 #define OPCODE_LDA 0x0 //Load memory address into Accumulator
+#define OPCODE_ADD 0x1 //Add memory address (operand) to Accumulator
+#define OPCODE_SUB 0x2 //Subtract memory address (operand) from Accumulator
 
 // Struct for SAP-1:
 typedef struct sap1_state_t {

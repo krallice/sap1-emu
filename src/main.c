@@ -15,7 +15,7 @@ int main(void) {
 
 	// Operations:
 	sap_state->ram[0x0] = (OPCODE_LDA << 4) + 0xA;
-	sap_state->ram[0x1] = (OPCODE_LDA << 4) + 0xB;
+	sap_state->ram[0x1] = (OPCODE_ADD << 4) + 0xB;
 	sap_state->ram[0x2] = OPCODE_HLT << 4;
 
 	// Data Section:

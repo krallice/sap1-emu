@@ -45,6 +45,24 @@ void do_opcode_hlt(sap_state_t *sap_state) {
 	printf("HLT: End of Program.\n");
 }
 
+void do_opcode_add(sap_state_t *sap_state) {
+
+	uint8_t ref_address = sap_state->ram[sap_state->pc] & OPERAND_MASK;
+	printf("ADD: Add Address 0x%.1x (Value: 0x%.2x / %d) to Accumulator (Old: 0x%.2x New: 0x%.2x)\n", ref_address, sap_state->ram[ref_address], 
+													  sap_state->ram[ref_address], sap_state->a,
+													  sap_state->a + sap_state->ram[ref_address]);
+	sap_state->a += sap_state->ram[ref_address];
+}
+
+void do_opcode_sub(sap_state_t *sap_state) {
+
+	uint8_t ref_address = sap_state->ram[sap_state->pc] & OPERAND_MASK;
+	printf("SUB: SUB Address 0x%.1x (Value: 0x%.2x / %d) from Accumulator (Old: 0x%.2x New: 0x%.2x)\n", ref_address, sap_state->ram[ref_address], 
+													  sap_state->ram[ref_address], sap_state->a,
+													  sap_state->a - sap_state->ram[ref_address]);
+	sap_state->a -= sap_state->ram[ref_address];
+}
+
 void do_opcode_lda(sap_state_t *sap_state) {
 
 	uint8_t ref_address = sap_state->ram[sap_state->pc] & OPERAND_MASK;
@@ -71,6 +89,15 @@ void execute_sap(sap_state_t *sap_state) {
 			case OPCODE_LDA:
 				do_opcode_lda(sap_state);
 				break;
+
+			case OPCODE_ADD:
+				do_opcode_add(sap_state);
+				break;
+
+			case OPCODE_SUB:
+				do_opcode_sub(sap_state);
+				break;
+
 			default:
 				printf("Unknown Opcode: 0x%.1x. Ignoring\n", sap_state->ram[sap_state->pc] >> 4);
 				break;
@@ -80,8 +107,5 @@ void execute_sap(sap_state_t *sap_state) {
 		sap_state->pc++;
 
 		usleep(1000);
-		#if SAP_DEBUG
-		printf("End of Cycle\n");
-		#endif
 	}
 }
