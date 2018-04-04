@@ -4,7 +4,7 @@
 sap1-emu is a rough C emulation of a simple 8Bit computer design documented in *Digital Computer Electronics* by Albert Malvino & Jerald Brown. Implemented based on the book's description of the logical behaviour of the hardware design for the SAP-1 (Simple As Possible). Inspired by Ben Eater's fantastic youtube series on his DIY 8Bit Breadboard Computer.
 
 ### Why?
-It was a pretty good exercise to gain an understanding how a *basic*, primitive computer functions. It was also an okay exercise with building something slightly non-trivial in C. Played a fair bit about more generic Makefile features aswell. 
+It was a pretty good exercise to gain an understanding how a *basic*, primitive computer functions. It was also an okay exercise in building something slightly non-trivial with C. Played a fair bit with generic Makefile features aswell to get it nice and scalable.
 
 ### Features:
 + 8bit architecture (8bit Registers, 8Bit Memory Addressing)
