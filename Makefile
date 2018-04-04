@@ -1,29 +1,33 @@
 CC=cc
-CFLAGS=-g -ansi -std=gnu99 -Wall
+CFLAGS=-ansi -std=gnu99 -Wall
 
 LINKER=cc -o
-LFLAGS=-Wall
-
-TARGET=sap1emu
+LFLAGS=-Wall -I. -lm
 
 SRCDIR=src
 BINDIR=bin
 OBJDIR=obj
 
+TARGET=sap1emu
+
 SOURCES  := $(wildcard $(SRCDIR)/*.c)
 INCLUDES := $(wildcard $(SRCDIR)/*.h)
 OBJECTS := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+DEPS := $(OBJECTS:%.o=%.d)
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	    @$(LINKER) $@ $(LFLAGS) $(OBJECTS)
 	        @echo "Linking complete!"
 
+-include $(DEPS)
+
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
-	    @$(CC) $(CFLAGS) -c $< -o $@
+	    @$(CC) -MMD $(CFLAGS) -c $< -o $@
 	    @echo "Compiled "$<" successfully!"
+
 
 .PHONY : clean
 clean:
-	@- $(RM) $(OBJECTS)
+	@- $(RM) $(OBJECTS) $(DEPS)
 	@- $(RM) $(BINDIR)/$(TARGET)
-	@echo "Cleanup Complete"
+	@echo "Cleanup Complete!"
