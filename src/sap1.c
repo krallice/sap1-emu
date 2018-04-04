@@ -70,6 +70,11 @@ void do_opcode_lda(sap_state_t *sap_state) {
 	sap_state->a = sap_state->ram[ref_address];
 }
 
+void do_opcode_out(sap_state_t *sap_state) {
+
+	printf("OUT: Printing Value: 0x%.2x\n", sap_state->a);
+}
+
 void execute_sap(sap_state_t *sap_state) {
 
 	#if SAP_DEBUG
@@ -96,6 +101,10 @@ void execute_sap(sap_state_t *sap_state) {
 
 			case OPCODE_SUB:
 				do_opcode_sub(sap_state);
+				break;
+
+			case OPCODE_OUT:
+				do_opcode_out(sap_state);
 				break;
 
 			default:
