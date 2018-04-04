@@ -19,6 +19,16 @@ It was a pretty good exercise to gain an understanding how a *basic*, primitive 
 + Extend to the SAP2/3 etc.. designs 
 + Port Doom?
 
+### Opcodes:
+
+Mnemonic        | Opcode (4bits)   | Operand (4bits)  | Description
+--- | --- | --- | ----
+LDA             | 0x0              | 4bit Memory Address | Load the value of memory @Address into Accumulator A
+ADD             | 0x1              | 4bit Memory Address | Add the value of memory @Address to Accumulator A
+SUB             | 0x2              | 4bit Memory Address | Subtract the value of memory @Address to Accumulator A
+OUT             | 0xE              | NULL | Send the value of the Accumulator A to the Output Pin
+HLT             | 0xF              | NULL | End execution of program
+
 ### Programming it:
 ```
         // Operations:
