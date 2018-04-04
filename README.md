@@ -19,6 +19,20 @@ It was a pretty good exercise to gain an understanding how a *basic*, primitive 
 + Extend to the SAP2/3 etc.. designs 
 + Port Doom?
 
+### Programming it:
+```
+        // Operations:
+        sap_state->ram[0x0] = (OPCODE_LDA << 4) + 0xA;
+        sap_state->ram[0x1] = (OPCODE_ADD << 4) + 0xB;
+        sap_state->ram[0x2] = OPCODE_OUT << 4;
+        sap_state->ram[0x3] = OPCODE_HLT << 4;
+
+        // Data Section:
+        sap_state->ram[0xA] = 0x50;
+        sap_state->ram[0xB] = 0x60;
+```
+
+### Running it:
 ```
 $ bin/sap1emu
 
