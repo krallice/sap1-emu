@@ -29,7 +29,7 @@ sap_state_t *init_sap_state(void) {
 
 void dump_sap_memory(sap_state_t *sap_state) {
 	for (int i = 0; i < sap_state->ram_size; i++) {
-		printf("Address: 0x%.1x\tData: 0x%.2x\n", i, sap_state->ram[i]);
+		printf("Address: 0x%.4x\tData: 0x%.2x\n", i, sap_state->ram[i]);
 	}		
 }
 
@@ -83,32 +83,32 @@ void execute_sap(sap_state_t *sap_state) {
 
 	while(1) {
 
-		uint8_t opcode = (sap_state->ram[sap_state->pc] & OPCODE_MASK) >> 4;
-		printf("Instruction: 0x%.1x\n", opcode);
+		uint8_t opcode = (sap_state->ram[sap_state->pc]);
+		printf("Instruction: 0x%.2x\n", opcode);
 
 		switch (opcode) {
 			case OPCODE_HLT:
 				do_opcode_hlt(sap_state);
 				return;
 
-			case OPCODE_LDA:
-				do_opcode_lda(sap_state);
-				break;
+			//case OPCODE_LDA:
+				//do_opcode_lda(sap_state);
+				//break;
 
-			case OPCODE_ADD:
-				do_opcode_add(sap_state);
-				break;
+			//case OPCODE_ADD:
+				//do_opcode_add(sap_state);
+				//break;
 
-			case OPCODE_SUB:
-				do_opcode_sub(sap_state);
-				break;
+			//case OPCODE_SUB:
+				//do_opcode_sub(sap_state);
+				//break;
 
-			case OPCODE_OUT:
-				do_opcode_out(sap_state);
-				break;
+			//case OPCODE_OUT:
+				//do_opcode_out(sap_state);
+				//break;
 
 			default:
-				printf("Unknown Opcode: 0x%.1x. Ignoring\n", sap_state->ram[sap_state->pc] >> 4);
+				printf("Unknown Opcode: 0x%.2x. Ignoring\n", sap_state->ram[sap_state->pc]);
 				break;
 		}
 

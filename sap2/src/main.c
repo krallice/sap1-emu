@@ -14,10 +14,7 @@ int main(void) {
 	// This is more akin to flipping bits with a magnetised needle
 
 	// Operations:
-	sap_state->ram[0x0] = (OPCODE_LDA << 4) + 0xA;
-	sap_state->ram[0x1] = (OPCODE_ADD << 4) + 0xB;
-	sap_state->ram[0x2] = OPCODE_OUT << 4;
-	sap_state->ram[0x3] = OPCODE_HLT << 4;
+	sap_state->ram[0x0] = OPCODE_HLT;
 
 	// Data Section:
 	sap_state->ram[0xA] = 0x50;
