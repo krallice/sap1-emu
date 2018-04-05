@@ -13,18 +13,23 @@
 #define SAP_DEBUG 1
 
 // n 8Bit RAM Addresses:
-#define SAP_RAM_SIZE 128
+#define SAP_RAM_SIZE 0xFFFF
 
 // 8Bit Opcode Definitions:
 #define OPCODE_MASK 0xF0
 #define OPERAND_MASK 0x0F
 
-#define OPCODE_HLT 0x76 //Halt Instruction Flow
+#define OPCODE_NOP 0x00 // No Execution
+#define OPCODE_HLT 0x76 // Halt Instruction Flow
 
-#define OPCODE_LDA 0x0 //Load memory address into Accumulator
-#define OPCODE_ADD 0x1 //Add memory address (operand) to Accumulator
-#define OPCODE_SUB 0x2 //Subtract memory address (operand) from Accumulator
-#define OPCODE_OUT 0xE //Send Accumulator Value to Output Pin
+#define OPCODE_MVI_A 0x3E // Move the Subsequent Byte Value into Register (A|B|C). 2 Byte Instruction
+#define OPCODE_MVI_B 0x06
+#define OPCODE_MVI_C 0x0E
+
+#define OPCODE_STA 0x32 // Load the following 16Bit (2 Byte) Memory Address into the Accumulator. 3 Byte Instruction.
+
+#define OPCODE_ADD_B 0x80 // Add the value in Register (B|C) to Accumulator
+#define OPCODE_ADD_C 0x81
 
 // Struct for SAP-2:
 typedef struct sap1_state_t {

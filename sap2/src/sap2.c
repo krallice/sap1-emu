@@ -16,7 +16,7 @@ sap_state_t *init_sap_state(void) {
 	if ( sap_state->ram == NULL ) {
 		goto errorout;
 	}
-	memset(sap_state->ram, 0xEE, sizeof(uint8_t)*sap_state->ram_size);
+	memset(sap_state->ram, OPCODE_NOP, sizeof(uint8_t)*sap_state->ram_size);
 
 	return sap_state;
 
@@ -28,7 +28,9 @@ sap_state_t *init_sap_state(void) {
 }
 
 void dump_sap_memory(sap_state_t *sap_state) {
-	for (int i = 0; i < sap_state->ram_size; i++) {
+	
+	// Dump the first 0x16 Words Only:
+	for (int i = 0; i < 0x16; i++) {
 		printf("Address: 0x%.4x\tData: 0x%.2x\n", i, sap_state->ram[i]);
 	}		
 }
@@ -38,6 +40,10 @@ void dump_sap_state(sap_state_t *sap_state) {
 	printf("\nDumping SAP State ::\n");
 	printf("Register A (Accumulator): 0x%.2x\n", sap_state->a);
 	printf("Register B:\t\t0x%.2x\n", sap_state->b);
+	printf("Register C:\t\t0x%.2x\n", sap_state->c);
+	printf("Register TMP:\t\t0x%.2x\n", sap_state->tmp);
+	printf("Zero Flag:\t\t%d\n", sap_state->flag_zero);
+	printf("Sign Flag:\t\t%d\n", sap_state->flag_sign);
 	printf("Program Counter:\t0x%.2x\n", sap_state->pc);
 }
 
@@ -45,34 +51,37 @@ void do_opcode_hlt(sap_state_t *sap_state) {
 	printf("HLT: End of Program.\n");
 }
 
-void do_opcode_add(sap_state_t *sap_state) {
+void do_opcode_nop(sap_state_t *sap_state) {
 
-	uint8_t ref_address = sap_state->ram[sap_state->pc] & OPERAND_MASK;
-	printf("ADD: Add Address 0x%.1x (Value: 0x%.2x / %d) to Accumulator (Old: 0x%.2x New: 0x%.2x)\n", ref_address, sap_state->ram[ref_address], 
-													  sap_state->ram[ref_address], sap_state->a,
-													  sap_state->a + sap_state->ram[ref_address]);
-	sap_state->a += sap_state->ram[ref_address];
+	printf("NOP: Doing Nothing\n");
 }
 
-void do_opcode_sub(sap_state_t *sap_state) {
+void do_opcode_mvi(sap_state_t *sap_state, uint8_t *dst_reg, char *dst_reg_name) {
 
-	uint8_t ref_address = sap_state->ram[sap_state->pc] & OPERAND_MASK;
-	printf("SUB: SUB Address 0x%.1x (Value: 0x%.2x / %d) from Accumulator (Old: 0x%.2x New: 0x%.2x)\n", ref_address, sap_state->ram[ref_address], 
-													  sap_state->ram[ref_address], sap_state->a,
-													  sap_state->a - sap_state->ram[ref_address]);
-	sap_state->a -= sap_state->ram[ref_address];
+	++sap_state->pc;
+	printf("MVI: Move Value 0x%.2x into Register %s\n", sap_state->ram[sap_state->pc], dst_reg_name);
+	*dst_reg = sap_state->ram[sap_state->pc];
 }
 
-void do_opcode_lda(sap_state_t *sap_state) {
+void do_opcode_sta(sap_state_t *sap_state) {
 
-	uint8_t ref_address = sap_state->ram[sap_state->pc] & OPERAND_MASK;
-	printf("LDA: Loading Address 0x%.1x (Value: 0x%.2x / %d) into Accumulator\n", ref_address, sap_state->ram[ref_address], sap_state->ram[ref_address]);
-	sap_state->a = sap_state->ram[ref_address];
+	// Todo: Smarter Bit Logic Here:
+	uint8_t lower_byte = sap_state->ram[++sap_state->pc];
+	uint8_t upper_byte = sap_state->ram[++sap_state->pc];
+	uint16_t load_address = ( 0xFF00 & upper_byte ) + ( 0x00FF & lower_byte);
+
+	printf("STA: Loading Address 0x%.4x (Value: 0x%.2x / %d) into Accumulator\n", load_address, sap_state->ram[load_address], sap_state->ram[load_address]);
+	sap_state->a = sap_state->ram[load_address];
+
 }
 
-void do_opcode_out(sap_state_t *sap_state) {
+void do_opcode_add(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name) {
 
-	printf("OUT: Printing Value: 0x%.2x\n", sap_state->a);
+	printf("ADD: Adding Value (0x%.2x / %d) in Register %s into Accumulator (0x%.2x / %d) with Result (0x%.2x / %d)\n",
+			*src_reg, *src_reg, src_reg_name,
+			sap_state->a, sap_state->a,
+			(int)(sap_state->a + *src_reg), (int)(sap_state->a + src_reg));
+	sap_state->a += *src_reg;
 }
 
 void execute_sap(sap_state_t *sap_state) {
@@ -91,22 +100,33 @@ void execute_sap(sap_state_t *sap_state) {
 				do_opcode_hlt(sap_state);
 				return;
 
-			//case OPCODE_LDA:
-				//do_opcode_lda(sap_state);
-				//break;
+			case OPCODE_NOP:
+				do_opcode_nop(sap_state);
+				break;
 
-			//case OPCODE_ADD:
-				//do_opcode_add(sap_state);
-				//break;
+			case OPCODE_MVI_A:
+				do_opcode_mvi(sap_state, &(sap_state->a), "A");
+				break;
 
-			//case OPCODE_SUB:
-				//do_opcode_sub(sap_state);
-				//break;
+			case OPCODE_MVI_B:
+				do_opcode_mvi(sap_state, &(sap_state->b), "B");
+				break;
 
-			//case OPCODE_OUT:
-				//do_opcode_out(sap_state);
-				//break;
+			case OPCODE_MVI_C:
+				do_opcode_mvi(sap_state, &(sap_state->c), "C");
+				break;
 
+			case OPCODE_STA:
+				do_opcode_sta(sap_state);
+				break;
+
+			case OPCODE_ADD_B:
+				do_opcode_add(sap_state, &(sap_state->b), "B");
+				break;
+
+			case OPCODE_ADD_C:
+				do_opcode_add(sap_state, &(sap_state->c), "C");
+				break;
 			default:
 				printf("Unknown Opcode: 0x%.2x. Ignoring\n", sap_state->ram[sap_state->pc]);
 				break;
