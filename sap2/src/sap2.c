@@ -77,10 +77,10 @@ void do_opcode_sta(sap_state_t *sap_state) {
 
 void do_opcode_add(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name) {
 
-	printf("ADD: Adding Value (0x%.2x / %d) in Register %s into Accumulator (0x%.2x / %d) with Result (0x%.2x / %d)\n",
+	printf("ADD: Adding Value (0x%.2x / %d) from Register %s to Accumulator (0x%.2x / %d) with Result (0x%.2x / %d)\n",
 			*src_reg, *src_reg, src_reg_name,
 			sap_state->a, sap_state->a,
-			(int)(sap_state->a + *src_reg), (int)(sap_state->a + src_reg));
+			(int)(sap_state->a + *src_reg), (int)(sap_state->a + *src_reg));
 	sap_state->a += *src_reg;
 }
 
@@ -93,7 +93,7 @@ void execute_sap(sap_state_t *sap_state) {
 	while(1) {
 
 		uint8_t opcode = (sap_state->ram[sap_state->pc]);
-		printf("Instruction: 0x%.2x\n", opcode);
+		printf("Instruction: 0x%.2x ", opcode);
 
 		switch (opcode) {
 			case OPCODE_HLT:
