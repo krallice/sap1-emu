@@ -14,6 +14,7 @@ int main(void) {
 	// This is more akin to flipping bits with a magnetised needle
 
 	// Operations:
+	/*
 	sap_state->ram[0x0000] = OPCODE_MVI_B;
 	sap_state->ram[0x0001] = 0x20;
 
@@ -26,10 +27,27 @@ int main(void) {
 
 	sap_state->ram[0x0007] = OPCODE_ADD_B;
 
-	sap_state->ram[0x0009] = OPCODE_HLT;
+	sap_state->ram[0x0008] = OPCODE_INR_C;
+	sap_state->ram[0x0009] = OPCODE_INR_C;
+
+	sap_state->ram[0x000A] = OPCODE_HLT;
 
 	// Data Section:
 	sap_state->ram[0x0015] = 0x60;
+	*/
+
+	sap_state->ram[0x0000] = OPCODE_STA;
+        sap_state->ram[0x0001] = 0x44;
+        sap_state->ram[0x0002] = 0x33;
+
+	sap_state->ram[0x0003] = OPCODE_MVI_B;
+        sap_state->ram[0x0004] = 0x02;
+
+	sap_state->ram[0x0005] = OPCODE_ADD_B;
+
+	sap_state->ram[0x0006] = OPCODE_HLT;
+
+	sap_state->ram[0x3344] = 0x03;
 
 	printf("\nDumping memory before execution:\n");
 	dump_sap_memory(sap_state);

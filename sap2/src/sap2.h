@@ -31,6 +31,10 @@
 #define OPCODE_ADD_B 0x80 // Add the value in Register (B|C) to Accumulator
 #define OPCODE_ADD_C 0x81
 
+#define OPCODE_INR_A 0x3C // Increment Registers by 1:
+#define OPCODE_INR_B 0x04
+#define OPCODE_INR_C 0x0C
+
 // Struct for SAP-2:
 typedef struct sap1_state_t {
 	uint16_t pc; // 16Bit Program Counter

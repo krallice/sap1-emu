@@ -68,11 +68,10 @@ void do_opcode_sta(sap_state_t *sap_state) {
 	// Todo: Smarter Bit Logic Here:
 	uint8_t lower_byte = sap_state->ram[++sap_state->pc];
 	uint8_t upper_byte = sap_state->ram[++sap_state->pc];
-	uint16_t load_address = ( 0xFF00 & upper_byte ) + ( 0x00FF & lower_byte);
+	uint16_t load_address = (upper_byte << 8) | lower_byte;
 
 	printf("STA: Loading Address 0x%.4x (Value: 0x%.2x / %d) into Accumulator\n", load_address, sap_state->ram[load_address], sap_state->ram[load_address]);
 	sap_state->a = sap_state->ram[load_address];
-
 }
 
 void do_opcode_add(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name) {
@@ -82,6 +81,14 @@ void do_opcode_add(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name)
 			sap_state->a, sap_state->a,
 			(int)(sap_state->a + *src_reg), (int)(sap_state->a + *src_reg));
 	sap_state->a += *src_reg;
+}
+
+void do_opcode_inr(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name) {
+
+	printf("INR: Incrementing Value (0x%.2x / %d) in Register %s to Value (0x%.2x / %d)\n",
+			*src_reg, *src_reg, src_reg_name,
+			(int)(*src_reg + 1), (int)(*src_reg + 1));
+	++*src_reg;
 }
 
 void execute_sap(sap_state_t *sap_state) {
@@ -127,6 +134,19 @@ void execute_sap(sap_state_t *sap_state) {
 			case OPCODE_ADD_C:
 				do_opcode_add(sap_state, &(sap_state->c), "C");
 				break;
+
+			case OPCODE_INR_A:
+				do_opcode_inr(sap_state, &(sap_state->a), "A");
+				break;
+
+			case OPCODE_INR_B:
+				do_opcode_inr(sap_state, &(sap_state->b), "B");
+				break;
+
+			case OPCODE_INR_C:
+				do_opcode_inr(sap_state, &(sap_state->c), "C");
+				break;
+
 			default:
 				printf("Unknown Opcode: 0x%.2x. Ignoring\n", sap_state->ram[sap_state->pc]);
 				break;
