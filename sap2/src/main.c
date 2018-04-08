@@ -53,7 +53,12 @@ int main(void) {
 	sap_state->ram[0x0007] = OPCODE_DCR_C;
 	sap_state->ram[0x0008] = OPCODE_SUB_C;
 
-	sap_state->ram[0x0009] = OPCODE_HLT;
+	sap_state->ram[0x0009] = OPCODE_JMP;
+        sap_state->ram[0x000A] = 0x00;
+        sap_state->ram[0x000B] = 0x05;
+
+	sap_state->ram[0x0500] = OPCODE_INR_C;
+	sap_state->ram[0x0501] = OPCODE_HLT;
 
 	sap_state->ram[0x3344] = 0x03;
 

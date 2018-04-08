@@ -116,24 +116,45 @@ void do_opcode_mov(sap_state_t *sap_state, uint8_t *dst_reg, char *dst_reg_name,
 	*dst_reg = *src_reg;
 }
 
+void do_opcode_jmp(sap_state_t *sap_state) {
+
+	uint8_t lower_byte = sap_state->ram[++sap_state->pc];
+	uint8_t upper_byte = sap_state->ram[++sap_state->pc];
+	uint16_t jmp_address = (upper_byte << 8) | lower_byte;
+
+	printf("JMP: Setting PC to Address %.4x\n", jmp_address);
+	sap_state->pc = jmp_address;
+}
+
 void execute_sap(sap_state_t *sap_state) {
 
 	#if SAP_DEBUG
 	printf("\nStarting Main Execution Loop\n");
 	#endif
 
+	int jmp_flag = 0;
+
 	while(1) {
+
+		jmp_flag = 0;
 
 		uint8_t opcode = (sap_state->ram[sap_state->pc]);
 		printf("Instruction: 0x%.2x ", opcode);
 
 		switch (opcode) {
+			// Misc:
 			case OPCODE_HLT:
 				do_opcode_hlt(sap_state);
 				return;
 
 			case OPCODE_NOP:
 				do_opcode_nop(sap_state);
+				break;
+
+			// Jumps:
+			case OPCODE_JMP:
+				do_opcode_jmp(sap_state);
+				jmp_flag = 1;
 				break;
 
 			// Loads:
@@ -227,8 +248,10 @@ void execute_sap(sap_state_t *sap_state) {
 				break;
 		}
 
-		// Increment Program Counter:
-		sap_state->pc++;
+		// Increment Program Counter if we havn't just jumped:
+		if ( jmp_flag != 1 ) {
+			sap_state->pc++;
+		}
 
 		usleep(1000);
 	}
