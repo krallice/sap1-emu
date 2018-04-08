@@ -31,9 +31,16 @@
 #define OPCODE_ADD_B 0x80 // Add the value in Register (B|C) to Accumulator
 #define OPCODE_ADD_C 0x81
 
+#define OPCODE_SUB_B 0x90 // Substract the value in Reg (B|C) from Accumulator
+#define OPCODE_SUB_C 0x91
+
 #define OPCODE_INR_A 0x3C // Increment Registers by 1:
 #define OPCODE_INR_B 0x04
 #define OPCODE_INR_C 0x0C
+
+#define OPCODE_DCR_A 0x3D // Decrement Registers by 1:
+#define OPCODE_DCR_B 0x05
+#define OPCODE_DCR_C 0x0D
 
 #define OPCODE_MOV_A_B 0x78 // Move from Reg X to Reg Y
 #define OPCODE_MOV_A_C 0x79

@@ -36,20 +36,24 @@ int main(void) {
 	sap_state->ram[0x0015] = 0x60;
 	*/
 
+	// Load Value in 0x3344 into A
 	sap_state->ram[0x0000] = OPCODE_STA;
         sap_state->ram[0x0001] = 0x44;
         sap_state->ram[0x0002] = 0x33;
 
+	// Move byte 2 into B
 	sap_state->ram[0x0003] = OPCODE_MVI_B;
         sap_state->ram[0x0004] = 0x02;
 
+	// A + B, then move B into C:
 	sap_state->ram[0x0005] = OPCODE_ADD_B;
-
 	sap_state->ram[0x0006] = OPCODE_MOV_C_B;
 
-	sap_state->ram[0x0007] = OPCODE_INR_C;
+	// C - 1, then A = A - C
+	sap_state->ram[0x0007] = OPCODE_DCR_C;
+	sap_state->ram[0x0008] = OPCODE_SUB_C;
 
-	sap_state->ram[0x000F] = OPCODE_HLT;
+	sap_state->ram[0x0009] = OPCODE_HLT;
 
 	sap_state->ram[0x3344] = 0x03;
 

@@ -79,16 +79,33 @@ void do_opcode_add(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name)
 	printf("ADD: Adding Value (0x%.2x / %d) from Register %s to Accumulator (0x%.2x / %d) with Result (0x%.2x / %d)\n",
 			*src_reg, *src_reg, src_reg_name,
 			sap_state->a, sap_state->a,
-			(int)(sap_state->a + *src_reg), (int)(sap_state->a + *src_reg));
+			(unsigned int)(sap_state->a + *src_reg), (unsigned int)(sap_state->a + *src_reg));
 	sap_state->a += *src_reg;
+}
+
+void do_opcode_sub(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name) {
+
+	printf("SUB: Subtracting Value (0x%.2x / %d) in Register %s from Accumulator (0x%.2x / %d) with Result (0x%.2x / %d)\n",
+			*src_reg, *src_reg, src_reg_name,
+			sap_state->a, sap_state->a,
+			(unsigned int)(sap_state->a - *src_reg), (unsigned int)(sap_state->a - *src_reg));
+	sap_state->a -= *src_reg;
 }
 
 void do_opcode_inr(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name) {
 
 	printf("INR: Incrementing Value (0x%.2x / %d) in Register %s to Value (0x%.2x / %d)\n",
 			*src_reg, *src_reg, src_reg_name,
-			(int)(*src_reg + 1), (int)(*src_reg + 1));
+			(unsigned int)(*src_reg + 1), (unsigned int)(*src_reg + 1));
 	++*src_reg;
+}
+
+void do_opcode_dcr(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name) {
+
+	printf("DCR: Decrementing Value (0x%.2x / %d) in Register %s to Value (0x%.2x / %d)\n",
+			*src_reg, *src_reg, src_reg_name,
+			(unsigned int)(*src_reg - 1), (unsigned int)(*src_reg - 1));
+	--*src_reg;
 }
 
 void do_opcode_mov(sap_state_t *sap_state, uint8_t *dst_reg, char *dst_reg_name, uint8_t *src_reg, char *src_reg_name) {
@@ -120,7 +137,6 @@ void execute_sap(sap_state_t *sap_state) {
 				break;
 
 			// Loads:
-
 			case OPCODE_MVI_A:
 				do_opcode_mvi(sap_state, &(sap_state->a), "A");
 				break;
@@ -138,7 +154,6 @@ void execute_sap(sap_state_t *sap_state) {
 				break;
 
 			// Adds:
-
 			case OPCODE_ADD_B:
 				do_opcode_add(sap_state, &(sap_state->b), "B");
 				break;
@@ -147,8 +162,16 @@ void execute_sap(sap_state_t *sap_state) {
 				do_opcode_add(sap_state, &(sap_state->c), "C");
 				break;
 
-			// Increments:
+			// Subtraction:
+			case OPCODE_SUB_B:
+				do_opcode_sub(sap_state, &(sap_state->b), "B");
+				break;
 
+			case OPCODE_SUB_C:
+				do_opcode_sub(sap_state, &(sap_state->c), "C");
+				break;
+
+			// Increments:
 			case OPCODE_INR_A:
 				do_opcode_inr(sap_state, &(sap_state->a), "A");
 				break;
@@ -161,8 +184,20 @@ void execute_sap(sap_state_t *sap_state) {
 				do_opcode_inr(sap_state, &(sap_state->c), "C");
 				break;
 
-			// Moves:
+			// Decrements:
+			case OPCODE_DCR_A:
+				do_opcode_dcr(sap_state, &(sap_state->a), "A");
+				break;
 
+			case OPCODE_DCR_B:
+				do_opcode_dcr(sap_state, &(sap_state->b), "B");
+				break;
+
+			case OPCODE_DCR_C:
+				do_opcode_dcr(sap_state, &(sap_state->c), "C");
+				break;
+
+			// Moves:
 			case OPCODE_MOV_A_B: 
 				do_opcode_mov(sap_state, &(sap_state->a), "A", &(sap_state->b), "B");
 				break;
