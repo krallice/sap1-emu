@@ -47,18 +47,18 @@ void dump_sap_state(sap_state_t *sap_state) {
 	printf("Program Counter:\t0x%.4x\n", sap_state->pc);
 }
 
-void set_zero_flag(sap_state_t *sap_state) {
+void set_zero_flag(sap_state_t *sap_state, uint8_t *reg) {
 	
-	if (sap_state->a == 0) {
+	if (*reg == 0) {
 		sap_state->flag_zero = 0;
 	} else {
 		sap_state->flag_zero = 1;
 	}
 }
 
-void set_flags(sap_state_t *sap_state) {
+void set_flags(sap_state_t *sap_state, uint8_t *reg) {
 
-	set_zero_flag(sap_state);
+	set_zero_flag(sap_state, reg);
 }
 
 void do_opcode_hlt(sap_state_t *sap_state) {
@@ -110,7 +110,7 @@ void do_opcode_add(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name)
 			sap_state->a, sap_state->a,
 			(unsigned int)(sap_state->a + *src_reg), (unsigned int)(sap_state->a + *src_reg));
 	sap_state->a += *src_reg;
-	set_flags(sap_state);
+	set_flags(sap_state, &(sap_state->a));
 	sap_state->pc++;
 }
 
@@ -121,7 +121,7 @@ void do_opcode_sub(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name)
 			sap_state->a, sap_state->a,
 			(unsigned int)(sap_state->a - *src_reg), (unsigned int)(sap_state->a - *src_reg));
 	sap_state->a -= *src_reg;
-	set_flags(sap_state);
+	set_flags(sap_state, &(sap_state->a));
 	sap_state->pc++;
 }
 
@@ -131,6 +131,7 @@ void do_opcode_inr(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name)
 			*src_reg, *src_reg, src_reg_name,
 			(unsigned int)(*src_reg + 1), (unsigned int)(*src_reg + 1));
 	++*src_reg;
+	set_flags(sap_state, src_reg);
 	sap_state->pc++;
 }
 
@@ -140,6 +141,7 @@ void do_opcode_dcr(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name)
 			*src_reg, *src_reg, src_reg_name,
 			(unsigned int)(*src_reg - 1), (unsigned int)(*src_reg - 1));
 	--*src_reg;
+	set_flags(sap_state, src_reg);
 	sap_state->pc++;
 }
 
@@ -183,11 +185,11 @@ void do_opcode_jnz(sap_state_t *sap_state) {
 	uint8_t upper_byte = sap_state->ram[++sap_state->pc];
 	uint16_t jmp_address = (upper_byte << 8) | lower_byte;
 
-	if ( sap_state->flag_zero == 1 ) {
+	if ( sap_state->flag_zero != 0 ) {
 		printf("JNZ: Setting PC to Address %.4x\n", jmp_address);
 		sap_state->pc = jmp_address;
 	} else {
-		printf("JNZ: Zero Flag Still Set. No Jump taken\n");
+		printf("JNZ: Zero Flag Set. No Jump taken\n");
 		sap_state->pc++;
 	}
 }
@@ -247,6 +249,10 @@ void execute_sap(sap_state_t *sap_state) {
 
 			case OPCODE_JZ:
 				do_opcode_jz(sap_state);
+				break;
+
+			case OPCODE_JNZ:
+				do_opcode_jnz(sap_state);
 				break;
 
 			case OPCODE_CALL:
@@ -353,6 +359,6 @@ void execute_sap(sap_state_t *sap_state) {
 				break;
 		}
 
-		usleep(1000);
+		usleep(1000000);
 	}
 }

@@ -30,7 +30,8 @@
 #define OPCODE_STA 0x32 // Store the Accumulator into the following 16Bit (2 Byte) Memory Address. 3 Byte Instruction.
 
 #define OPCODE_JMP 0xC3 // Unconditional Jump
-#define OPCODE_JZ  0xCA // Unconditional Jump
+#define OPCODE_JZ  0xCA // Jmp if Flag_Zero -= 0
+#define OPCODE_JNZ  0xC2 // Jmp if Flag_Zero != 0
 
 #define OPCODE_CALL 0xCD // Call Function
 #define OPCODE_RET  0xC9 // Return to Caller

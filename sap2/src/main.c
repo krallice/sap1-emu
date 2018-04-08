@@ -72,6 +72,32 @@ void loadprog_call_ret(sap_state_t *sap_state) {
 
 }
 
+void loadprog_jnz_test(sap_state_t *sap_state) {
+
+	// Iterator C = 5:
+	sap_state->ram[0x0000] = OPCODE_MVI_C;
+        sap_state->ram[0x0001] = 0x05;
+
+	// Multiplier B = 7:
+	sap_state->ram[0x0002] = OPCODE_MVI_B;
+        sap_state->ram[0x0003] = 0x07;
+
+	// Product A = 0:
+	sap_state->ram[0x0004] = OPCODE_MVI_A;
+        sap_state->ram[0x0005] = 0x00;
+
+	// while ( C != 0 )
+	// 	A = A + B
+	//	C--
+	sap_state->ram[0x0006] = OPCODE_ADD_B;
+	sap_state->ram[0x0007] = OPCODE_DCR_C;
+	sap_state->ram[0x0008] = OPCODE_JNZ;
+	sap_state->ram[0x0009] = 0x06;
+	sap_state->ram[0x000A] = 0x00;
+
+	sap_state->ram[0x000B] = OPCODE_HLT;
+}
+
 int main(void) {
 
 	// Init our SAP Microcontroller:
@@ -81,7 +107,8 @@ int main(void) {
 	}
 
 	//loadprog_lda_sta_5(sap_state);
-	loadprog_call_ret(sap_state);
+	//loadprog_call_ret(sap_state);
+	loadprog_jnz_test(sap_state);
 
 	printf("\nDumping memory before execution:\n");
 	dump_sap_memory(sap_state);
