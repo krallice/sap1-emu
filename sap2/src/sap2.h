@@ -35,6 +35,13 @@
 #define OPCODE_INR_B 0x04
 #define OPCODE_INR_C 0x0C
 
+#define OPCODE_MOV_A_B 0x78 // Move from Reg X to Reg Y
+#define OPCODE_MOV_A_C 0x79
+#define OPCODE_MOV_B_A 0x47
+#define OPCODE_MOV_B_C 0x41
+#define OPCODE_MOV_C_A 0x4F
+#define OPCODE_MOV_C_B 0x48
+
 // Struct for SAP-2:
 typedef struct sap1_state_t {
 	uint16_t pc; // 16Bit Program Counter

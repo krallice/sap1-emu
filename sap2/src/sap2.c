@@ -91,6 +91,14 @@ void do_opcode_inr(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name)
 	++*src_reg;
 }
 
+void do_opcode_mov(sap_state_t *sap_state, uint8_t *dst_reg, char *dst_reg_name, uint8_t *src_reg, char *src_reg_name) {
+
+	printf("MOV: Moving Value (0x%.2x / %d) from Register %s to Register %s\n",
+			*src_reg, *src_reg, src_reg_name,
+			dst_reg_name);
+	*dst_reg = *src_reg;
+}
+
 void execute_sap(sap_state_t *sap_state) {
 
 	#if SAP_DEBUG
@@ -111,6 +119,8 @@ void execute_sap(sap_state_t *sap_state) {
 				do_opcode_nop(sap_state);
 				break;
 
+			// Loads:
+
 			case OPCODE_MVI_A:
 				do_opcode_mvi(sap_state, &(sap_state->a), "A");
 				break;
@@ -127,6 +137,8 @@ void execute_sap(sap_state_t *sap_state) {
 				do_opcode_sta(sap_state);
 				break;
 
+			// Adds:
+
 			case OPCODE_ADD_B:
 				do_opcode_add(sap_state, &(sap_state->b), "B");
 				break;
@@ -134,6 +146,8 @@ void execute_sap(sap_state_t *sap_state) {
 			case OPCODE_ADD_C:
 				do_opcode_add(sap_state, &(sap_state->c), "C");
 				break;
+
+			// Increments:
 
 			case OPCODE_INR_A:
 				do_opcode_inr(sap_state, &(sap_state->a), "A");
@@ -145,6 +159,32 @@ void execute_sap(sap_state_t *sap_state) {
 
 			case OPCODE_INR_C:
 				do_opcode_inr(sap_state, &(sap_state->c), "C");
+				break;
+
+			// Moves:
+
+			case OPCODE_MOV_A_B: 
+				do_opcode_mov(sap_state, &(sap_state->a), "A", &(sap_state->b), "B");
+				break;
+
+			case OPCODE_MOV_A_C: 
+				do_opcode_mov(sap_state, &(sap_state->a), "A", &(sap_state->c), "C");
+				break;
+
+			case OPCODE_MOV_B_A: 
+				do_opcode_mov(sap_state, &(sap_state->b), "B", &(sap_state->a), "A");
+				break;
+
+			case OPCODE_MOV_B_C: 
+				do_opcode_mov(sap_state, &(sap_state->b), "B", &(sap_state->c), "C");
+				break;
+
+			case OPCODE_MOV_C_A: 
+				do_opcode_mov(sap_state, &(sap_state->c), "C", &(sap_state->a), "A");
+				break;
+
+			case OPCODE_MOV_C_B: 
+				do_opcode_mov(sap_state, &(sap_state->c), "C", &(sap_state->b), "B");
 				break;
 
 			default:

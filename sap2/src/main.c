@@ -45,7 +45,11 @@ int main(void) {
 
 	sap_state->ram[0x0005] = OPCODE_ADD_B;
 
-	sap_state->ram[0x0006] = OPCODE_HLT;
+	sap_state->ram[0x0006] = OPCODE_MOV_C_B;
+
+	sap_state->ram[0x0007] = OPCODE_INR_C;
+
+	sap_state->ram[0x000F] = OPCODE_HLT;
 
 	sap_state->ram[0x3344] = 0x03;
 
