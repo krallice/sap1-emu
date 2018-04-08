@@ -1,13 +1,9 @@
 #include "main.h"
 #include "sap2.h"
 
-int main(void) {
+void loadprog_lda_sta_5(sap_state_t *sap_state) {
 
-	// Init our SAP Microcontroller:
-	sap_state_t *sap_state = init_sap_state();
-	if (sap_state == NULL) {
-		return 1;
-	}
+	// Program: 2 + 3 = 5 the long way
 
 	// Load Value in 0x3344 into A
 	sap_state->ram[0x0000] = OPCODE_LDA;
@@ -53,6 +49,17 @@ int main(void) {
 	sap_state->ram[0x0507] = OPCODE_HLT;
 
 	sap_state->ram[0x3344] = 0x03;
+}
+
+int main(void) {
+
+	// Init our SAP Microcontroller:
+	sap_state_t *sap_state = init_sap_state();
+	if (sap_state == NULL) {
+		return 1;
+	}
+
+	loadprog_lda_sta_5(sap_state);
 
 	printf("\nDumping memory before execution:\n");
 	dump_sap_memory(sap_state);
