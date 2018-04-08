@@ -47,6 +47,20 @@ void dump_sap_state(sap_state_t *sap_state) {
 	printf("Program Counter:\t0x%.2x\n", sap_state->pc);
 }
 
+void set_zero_flag(sap_state_t *sap_state) {
+	
+	if (sap_state->a == 0) {
+		sap_state->flag_zero = 0;
+	} else {
+		sap_state->flag_zero = 1;
+	}
+}
+
+void set_flags(sap_state_t *sap_state) {
+
+	set_zero_flag(sap_state);
+}
+
 void do_opcode_hlt(sap_state_t *sap_state) {
 	printf("HLT: End of Program.\n");
 }
@@ -54,6 +68,7 @@ void do_opcode_hlt(sap_state_t *sap_state) {
 void do_opcode_nop(sap_state_t *sap_state) {
 
 	printf("NOP: Doing Nothing\n");
+	sap_state->pc++;
 }
 
 void do_opcode_mvi(sap_state_t *sap_state, uint8_t *dst_reg, char *dst_reg_name) {
@@ -61,17 +76,31 @@ void do_opcode_mvi(sap_state_t *sap_state, uint8_t *dst_reg, char *dst_reg_name)
 	++sap_state->pc;
 	printf("MVI: Move Value 0x%.2x into Register %s\n", sap_state->ram[sap_state->pc], dst_reg_name);
 	*dst_reg = sap_state->ram[sap_state->pc];
+	sap_state->pc++;
 }
 
-void do_opcode_sta(sap_state_t *sap_state) {
+void do_opcode_lda(sap_state_t *sap_state) {
 
 	// Todo: Smarter Bit Logic Here:
 	uint8_t lower_byte = sap_state->ram[++sap_state->pc];
 	uint8_t upper_byte = sap_state->ram[++sap_state->pc];
 	uint16_t load_address = (upper_byte << 8) | lower_byte;
 
-	printf("STA: Loading Address 0x%.4x (Value: 0x%.2x / %d) into Accumulator\n", load_address, sap_state->ram[load_address], sap_state->ram[load_address]);
+	printf("LDA: Loading Address 0x%.4x (Value: 0x%.2x / %d) into Accumulator\n", load_address, sap_state->ram[load_address], sap_state->ram[load_address]);
 	sap_state->a = sap_state->ram[load_address];
+	sap_state->pc++;
+}
+
+void do_opcode_sta(sap_state_t *sap_state) {
+
+	uint8_t lower_byte = sap_state->ram[++sap_state->pc];
+	uint8_t upper_byte = sap_state->ram[++sap_state->pc];
+	uint16_t store_address = (upper_byte << 8) | lower_byte;
+
+	printf("STA: Storing Accumulator Value: (0x%.2x / %d) into Address 0x%.4x\n", sap_state->a, sap_state->a,
+						store_address);
+	sap_state->ram[store_address] = sap_state->a;
+	sap_state->pc++;
 }
 
 void do_opcode_add(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name) {
@@ -81,6 +110,8 @@ void do_opcode_add(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name)
 			sap_state->a, sap_state->a,
 			(unsigned int)(sap_state->a + *src_reg), (unsigned int)(sap_state->a + *src_reg));
 	sap_state->a += *src_reg;
+	set_flags(sap_state);
+	sap_state->pc++;
 }
 
 void do_opcode_sub(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name) {
@@ -90,6 +121,8 @@ void do_opcode_sub(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name)
 			sap_state->a, sap_state->a,
 			(unsigned int)(sap_state->a - *src_reg), (unsigned int)(sap_state->a - *src_reg));
 	sap_state->a -= *src_reg;
+	set_flags(sap_state);
+	sap_state->pc++;
 }
 
 void do_opcode_inr(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name) {
@@ -98,6 +131,7 @@ void do_opcode_inr(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name)
 			*src_reg, *src_reg, src_reg_name,
 			(unsigned int)(*src_reg + 1), (unsigned int)(*src_reg + 1));
 	++*src_reg;
+	sap_state->pc++;
 }
 
 void do_opcode_dcr(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name) {
@@ -106,6 +140,7 @@ void do_opcode_dcr(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name)
 			*src_reg, *src_reg, src_reg_name,
 			(unsigned int)(*src_reg - 1), (unsigned int)(*src_reg - 1));
 	--*src_reg;
+	sap_state->pc++;
 }
 
 void do_opcode_mov(sap_state_t *sap_state, uint8_t *dst_reg, char *dst_reg_name, uint8_t *src_reg, char *src_reg_name) {
@@ -114,6 +149,7 @@ void do_opcode_mov(sap_state_t *sap_state, uint8_t *dst_reg, char *dst_reg_name,
 			*src_reg, *src_reg, src_reg_name,
 			dst_reg_name);
 	*dst_reg = *src_reg;
+	sap_state->pc++;
 }
 
 void do_opcode_jmp(sap_state_t *sap_state) {
@@ -126,17 +162,43 @@ void do_opcode_jmp(sap_state_t *sap_state) {
 	sap_state->pc = jmp_address;
 }
 
+void do_opcode_jz(sap_state_t *sap_state) {
+
+	uint8_t lower_byte = sap_state->ram[++sap_state->pc];
+	uint8_t upper_byte = sap_state->ram[++sap_state->pc];
+	uint16_t jmp_address = (upper_byte << 8) | lower_byte;
+
+	if ( sap_state->flag_zero == 0 ) {
+		printf("JZ: Setting PC to Address %.4x\n", jmp_address);
+		sap_state->pc = jmp_address;
+	} else {
+		printf("JZ: Zero Flag Not Set. No Jump taken\n");
+		sap_state->pc++;
+	}
+}
+
+void do_opcode_jnz(sap_state_t *sap_state) {
+
+	uint8_t lower_byte = sap_state->ram[++sap_state->pc];
+	uint8_t upper_byte = sap_state->ram[++sap_state->pc];
+	uint16_t jmp_address = (upper_byte << 8) | lower_byte;
+
+	if ( sap_state->flag_zero == 1 ) {
+		printf("JNZ: Setting PC to Address %.4x\n", jmp_address);
+		sap_state->pc = jmp_address;
+	} else {
+		printf("JNZ: Zero Flag Still Set. No Jump taken\n");
+		sap_state->pc++;
+	}
+}
+
 void execute_sap(sap_state_t *sap_state) {
 
 	#if SAP_DEBUG
 	printf("\nStarting Main Execution Loop\n");
 	#endif
 
-	int jmp_flag = 0;
-
 	while(1) {
-
-		jmp_flag = 0;
 
 		uint8_t opcode = (sap_state->ram[sap_state->pc]);
 		printf("Instruction: 0x%.2x ", opcode);
@@ -154,7 +216,10 @@ void execute_sap(sap_state_t *sap_state) {
 			// Jumps:
 			case OPCODE_JMP:
 				do_opcode_jmp(sap_state);
-				jmp_flag = 1;
+				break;
+
+			case OPCODE_JZ:
+				do_opcode_jz(sap_state);
 				break;
 
 			// Loads:
@@ -170,6 +235,11 @@ void execute_sap(sap_state_t *sap_state) {
 				do_opcode_mvi(sap_state, &(sap_state->c), "C");
 				break;
 
+			case OPCODE_LDA:
+				do_opcode_lda(sap_state);
+				break;
+
+			// Store:
 			case OPCODE_STA:
 				do_opcode_sta(sap_state);
 				break;
@@ -246,11 +316,6 @@ void execute_sap(sap_state_t *sap_state) {
 			default:
 				printf("Unknown Opcode: 0x%.2x. Ignoring\n", sap_state->ram[sap_state->pc]);
 				break;
-		}
-
-		// Increment Program Counter if we havn't just jumped:
-		if ( jmp_flag != 1 ) {
-			sap_state->pc++;
 		}
 
 		usleep(1000);

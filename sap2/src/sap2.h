@@ -26,9 +26,11 @@
 #define OPCODE_MVI_B 0x06
 #define OPCODE_MVI_C 0x0E
 
-#define OPCODE_STA 0x32 // Load the following 16Bit (2 Byte) Memory Address into the Accumulator. 3 Byte Instruction.
+#define OPCODE_LDA 0x3A // Load the following 16Bit (2 Byte) Memory Address into the Accumulator. 3 Byte Instruction.
+#define OPCODE_STA 0x32 // Store the Accumulator into the following 16Bit (2 Byte) Memory Address. 3 Byte Instruction.
 
 #define OPCODE_JMP 0xC3 // Unconditional Jump
+#define OPCODE_JZ  0xCA // Unconditional Jump
 
 #define OPCODE_ADD_B 0x80 // Add the value in Register (B|C) to Accumulator
 #define OPCODE_ADD_C 0x81
