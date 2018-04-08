@@ -32,6 +32,9 @@
 #define OPCODE_JMP 0xC3 // Unconditional Jump
 #define OPCODE_JZ  0xCA // Unconditional Jump
 
+#define OPCODE_CALL 0xCD // Call Function
+#define OPCODE_RET  0xC9 // Return to Caller
+
 #define OPCODE_ADD_B 0x80 // Add the value in Register (B|C) to Accumulator
 #define OPCODE_ADD_C 0x81
 

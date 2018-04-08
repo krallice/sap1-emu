@@ -51,6 +51,27 @@ void loadprog_lda_sta_5(sap_state_t *sap_state) {
 	sap_state->ram[0x3344] = 0x03;
 }
 
+void loadprog_call_ret(sap_state_t *sap_state) {
+
+	sap_state->ram[0x0000] = OPCODE_MVI_A;
+        sap_state->ram[0x0001] = 0x07;
+
+	// Call AddTwo() at x0700:
+	sap_state->ram[0x0002] = OPCODE_CALL;
+        sap_state->ram[0x0003] = 0x00;
+        sap_state->ram[0x0004] = 0x07;
+
+	// Return Here:
+	sap_state->ram[0x0005] = OPCODE_HLT;
+
+	// AddTwo() function:
+	sap_state->ram[0x0700] = OPCODE_MVI_C;
+        sap_state->ram[0x0701] = 0x02;
+        sap_state->ram[0x0702] = OPCODE_ADD_C;
+	sap_state->ram[0x0703] = OPCODE_RET;
+
+}
+
 int main(void) {
 
 	// Init our SAP Microcontroller:
@@ -59,7 +80,8 @@ int main(void) {
 		return 1;
 	}
 
-	loadprog_lda_sta_5(sap_state);
+	//loadprog_lda_sta_5(sap_state);
+	loadprog_call_ret(sap_state);
 
 	printf("\nDumping memory before execution:\n");
 	dump_sap_memory(sap_state);

@@ -44,7 +44,7 @@ void dump_sap_state(sap_state_t *sap_state) {
 	printf("Register TMP:\t\t0x%.2x\n", sap_state->tmp);
 	printf("Zero Flag:\t\t%d\n", sap_state->flag_zero);
 	printf("Sign Flag:\t\t%d\n", sap_state->flag_sign);
-	printf("Program Counter:\t0x%.2x\n", sap_state->pc);
+	printf("Program Counter:\t0x%.4x\n", sap_state->pc);
 }
 
 void set_zero_flag(sap_state_t *sap_state) {
@@ -192,6 +192,33 @@ void do_opcode_jnz(sap_state_t *sap_state) {
 	}
 }
 
+void do_opcode_call(sap_state_t *sap_state) {
+
+	uint8_t lower_byte = sap_state->ram[++sap_state->pc];
+	uint8_t upper_byte = sap_state->ram[++sap_state->pc];
+	uint16_t call_address = (upper_byte << 8) | lower_byte;
+
+	// Increment PC and save at the highest 2 bytes of RAM:
+	++sap_state->pc;
+	sap_state->ram[0xFFFE] = sap_state->pc & 0xFF; // Lower Byte
+	sap_state->ram[0xFFFF] = sap_state->pc >> 8; // Upper Byte
+
+	// Jump:
+	printf("CALL: Calling Routine at 0x%.4x\n", call_address);
+	sap_state->pc = call_address;
+}
+
+void do_opcode_ret(sap_state_t *sap_state) {
+
+	// Retrieve from RAM and Jump:
+	uint8_t lower_byte = sap_state->ram[0xFFFE];
+	uint8_t upper_byte = sap_state->ram[0xFFFF];
+	uint16_t ret_address = (upper_byte << 8) | lower_byte;
+
+	printf("RET: Returning to 0x%.4x\n", ret_address);
+	sap_state->pc = ret_address;
+}
+
 void execute_sap(sap_state_t *sap_state) {
 
 	#if SAP_DEBUG
@@ -220,6 +247,14 @@ void execute_sap(sap_state_t *sap_state) {
 
 			case OPCODE_JZ:
 				do_opcode_jz(sap_state);
+				break;
+
+			case OPCODE_CALL:
+				do_opcode_call(sap_state);
+				break;
+
+			case OPCODE_RET:
+				do_opcode_ret(sap_state);
 				break;
 
 			// Loads:
