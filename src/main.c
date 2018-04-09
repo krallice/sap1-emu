@@ -20,8 +20,8 @@ int main(void) {
 	sap_state->ram[0x3] = OPCODE_HLT << 4;
 
 	// Data Section:
-	sap_state->ram[0xA] = 0x50;
-	sap_state->ram[0xB] = 0x60;
+	sap_state->ram[0xA] = 0x03;
+	sap_state->ram[0xB] = 0x02;
 
 	printf("\nDumping memory before execution:\n");
 	dump_sap_memory(sap_state);

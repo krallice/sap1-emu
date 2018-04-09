@@ -28,8 +28,8 @@
 // Struct for SAP-1:
 typedef struct sap1_state_t {
 	uint8_t pc :4; // 4Bit Program Counter (16 Values)
-        uint8_t a; // 8Bit A Register
-        uint8_t b; // 8Bit B Register
+        int8_t a; // 8Bit A Register
+        int8_t b; // 8Bit B Register
 	uint8_t *ram; // Pointer to n x 8bit RAM Addresses
 	uint8_t ram_size;
 } sap_state_t;
