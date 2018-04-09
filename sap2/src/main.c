@@ -147,6 +147,41 @@ void loadprog_zero_test(sap_state_t *sap_state) {
         sap_state->ram[0x0600] = 0x03;
 }
 
+void loadprog_cma_test(sap_state_t *sap_state) {
+
+	sap_state->ram[0x0000] = OPCODE_MVI_A;
+	sap_state->ram[0x0001] = 0x01;
+	sap_state->ram[0x0002] = OPCODE_CMA;
+
+	sap_state->ram[0x0003] = OPCODE_MVI_A;
+	sap_state->ram[0x0004] = 0xE4;
+	sap_state->ram[0x0005] = OPCODE_CMA;
+
+	sap_state->ram[0x0006] = OPCODE_CMA;
+
+	sap_state->ram[0x0007] = OPCODE_JNZ;
+        sap_state->ram[0x0008] = 0x50;
+        sap_state->ram[0x0009] = 0x00;
+
+	sap_state->ram[0x0050] = OPCODE_MVI_B;
+        sap_state->ram[0x0051] = 0xE4;
+	sap_state->ram[0x0052] = OPCODE_ANA_B;
+
+	sap_state->ram[0x0053] = OPCODE_CALL;
+        sap_state->ram[0x0054] = 0x50;
+        sap_state->ram[0x0055] = 0x70;
+
+	sap_state->ram[0x0056] = OPCODE_ANI;
+        sap_state->ram[0x0057] = 0x3D;
+
+	sap_state->ram[0x0058] = OPCODE_HLT;
+
+	sap_state->ram[0x7050] = OPCODE_MVI_C;
+        sap_state->ram[0x7051] = 0xF2;
+	sap_state->ram[0x7052] = OPCODE_ANA_C;
+	sap_state->ram[0x7053] = OPCODE_RET;
+}
+
 int main(void) {
 
 	// Init our SAP Microcontroller:
@@ -158,8 +193,9 @@ int main(void) {
 	//loadprog_lda_sta_5(sap_state);
 	//loadprog_call_ret(sap_state);
 	//loadprog_jnz_test(sap_state);
-	loadprog_sign_test(sap_state);
+	//loadprog_sign_test(sap_state);
 	//loadprog_zero_test(sap_state);
+	loadprog_cma_test(sap_state);
 
 	printf("\nDumping memory before execution:\n");
 	dump_sap_memory(sap_state);

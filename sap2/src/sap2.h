@@ -58,6 +58,12 @@
 #define OPCODE_MOV_C_A 0x4F
 #define OPCODE_MOV_C_B 0x48
 
+#define OPCODE_CMA 0x2F // Complement the Accumulator
+#define OPCODE_ANA_B 0xA0 // A & B
+#define OPCODE_ANA_C 0xA1 // A & C
+#define OPCODE_ANI 0xE6 // A & Immediate Byte
+
+
 // Struct for SAP-2:
 typedef struct sap1_state_t {
 	uint16_t pc; // 16Bit Program Counter

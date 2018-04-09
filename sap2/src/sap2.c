@@ -1,5 +1,16 @@
 #include "sap2.h"
 
+#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
+#define BYTE_TO_BINARY(byte)  \
+  (byte & 0x80 ? '1' : '0'), \
+  (byte & 0x40 ? '1' : '0'), \
+  (byte & 0x20 ? '1' : '0'), \
+  (byte & 0x10 ? '1' : '0'), \
+  (byte & 0x08 ? '1' : '0'), \
+  (byte & 0x04 ? '1' : '0'), \
+  (byte & 0x02 ? '1' : '0'), \
+  (byte & 0x01 ? '1' : '0') 
+
 // Initialise our State
 sap_state_t *init_sap_state(void) {
 
@@ -38,9 +49,9 @@ void dump_sap_memory(sap_state_t *sap_state) {
 void dump_sap_state(sap_state_t *sap_state) {
 
 	printf("\nDumping SAP State ::\n");
-	printf("Register A (Accumulator): 0x%.2x\n", sap_state->a);
-	printf("Register B:\t\t0x%.2x\n", sap_state->b);
-	printf("Register C:\t\t0x%.2x\n", sap_state->c);
+	printf("Register A (Accumulator): 0x%.2x\n", (uint8_t)sap_state->a);
+	printf("Register B:\t\t0x%.2x\n", (uint8_t)sap_state->b);
+	printf("Register C:\t\t0x%.2x\n", (uint8_t)sap_state->c);
 	printf("Zero Flag:\t\t%d\n", sap_state->flag_zero);
 	printf("Sign Flag:\t\t%d\n", sap_state->flag_sign);
 	printf("Program Counter:\t0x%.4x\n", sap_state->pc);
@@ -179,7 +190,7 @@ void do_opcode_jz(sap_state_t *sap_state) {
 	uint8_t upper_byte = sap_state->ram[++sap_state->pc];
 	uint16_t jmp_address = (upper_byte << 8) | lower_byte;
 
-	if ( sap_state->flag_zero == 0 ) {
+	if ( sap_state->flag_zero == 1 ) {
 		printf("JZ: Setting PC to Address %.4x\n", jmp_address);
 		sap_state->pc = jmp_address;
 	} else {
@@ -194,12 +205,12 @@ void do_opcode_jnz(sap_state_t *sap_state) {
 	uint8_t upper_byte = sap_state->ram[++sap_state->pc];
 	uint16_t jmp_address = (upper_byte << 8) | lower_byte;
 
-	if ( sap_state->flag_zero != 0 ) {
+	if ( sap_state->flag_zero == 1 ) {
+		printf("JNZ: Zero Flag Not Set. No Jump taken\n");
+		sap_state->pc++;
+	} else {
 		printf("JNZ: Setting PC to Address %.4x\n", jmp_address);
 		sap_state->pc = jmp_address;
-	} else {
-		printf("JNZ: Zero Flag Set. No Jump taken\n");
-		sap_state->pc++;
 	}
 }
 
@@ -244,6 +255,38 @@ void do_opcode_ret(sap_state_t *sap_state) {
 
 	printf("RET: Returning to 0x%.4x\n", ret_address);
 	sap_state->pc = ret_address;
+}
+
+void do_opcode_cma(sap_state_t *sap_state) {
+
+	printf("CMA: Complemented the Accumulator from "BYTE_TO_BINARY_PATTERN" "BYTE_TO_BINARY_PATTERN"\n", 
+							BYTE_TO_BINARY(sap_state->a), BYTE_TO_BINARY(~sap_state->a)); 
+
+	sap_state->a = ~sap_state->a;
+	set_flags(sap_state, &(sap_state->a));
+	++sap_state->pc;
+}
+
+void do_opcode_ana(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name) {
+
+	printf("ANA: ANDing Register %s ("BYTE_TO_BINARY_PATTERN") with Accumulator ("BYTE_TO_BINARY_PATTERN") with Result "BYTE_TO_BINARY_PATTERN"\n",
+			src_reg_name, BYTE_TO_BINARY(*src_reg), BYTE_TO_BINARY(sap_state->a), BYTE_TO_BINARY(*src_reg & sap_state->a));
+
+	sap_state->a = *src_reg & sap_state->a;
+	set_flags(sap_state, &(sap_state->a));
+	sap_state->pc++;
+}
+
+void do_opcode_ani(sap_state_t *sap_state) {
+
+	uint8_t next_byte = sap_state->ram[++sap_state->pc];
+
+	printf("ANA: ANDing Accumulator ("BYTE_TO_BINARY_PATTERN") with next byte ("BYTE_TO_BINARY_PATTERN") with Result "BYTE_TO_BINARY_PATTERN"\n",
+			BYTE_TO_BINARY(sap_state->a), BYTE_TO_BINARY(next_byte), BYTE_TO_BINARY(sap_state->a & next_byte));
+
+	sap_state->a = next_byte & sap_state->a;
+	set_flags(sap_state, &(sap_state->a));
+	sap_state->pc++;
 }
 
 void execute_sap(sap_state_t *sap_state) {
@@ -381,6 +424,23 @@ void execute_sap(sap_state_t *sap_state) {
 
 			case OPCODE_MOV_C_B: 
 				do_opcode_mov(sap_state, &(sap_state->c), "C", &(sap_state->b), "B");
+				break;
+
+			// Logic:
+			case OPCODE_CMA:
+				do_opcode_cma(sap_state);
+				break;
+
+			case OPCODE_ANA_B:
+				do_opcode_ana(sap_state, &(sap_state->b), "B");
+				break;
+
+			case OPCODE_ANA_C:
+				do_opcode_ana(sap_state, &(sap_state->c), "C");
+				break;
+
+			case OPCODE_ANI:
+				do_opcode_ani(sap_state);
 				break;
 
 			default:
