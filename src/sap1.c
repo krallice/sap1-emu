@@ -16,7 +16,7 @@ sap_state_t *init_sap_state(void) {
 	if ( sap_state->ram == NULL ) {
 		goto errorout;
 	}
-	memset(sap_state->ram, 0xEE, sizeof(uint8_t)*sap_state->ram_size);
+	memset(sap_state->ram, 0x00, sizeof(uint8_t)*sap_state->ram_size);
 
 	return sap_state;
 
