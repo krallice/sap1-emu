@@ -2,7 +2,7 @@
 
 ### See Also:
 ##### [SAP-2](./sap2/README.md) - Second Generation with 64K RAM, Loops and Functions
----
+
 ### What is it?
 sap1-emu is a rough C emulation of a simple 8Bit computer design documented in *Digital Computer Electronics* by Albert Malvino & Jerald Brown. Implemented based on the book's description of the logical behaviour of the hardware design for the SAP-1 (Simple As Possible). Inspired by Ben Eater's fantastic youtube series on his DIY 8Bit Breadboard Computer.
 
