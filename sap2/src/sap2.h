@@ -63,6 +63,9 @@
 #define OPCODE_ANA_C 0xA1 // A & C
 #define OPCODE_ANI 0xE6 // A & Immediate Byte
 
+#define OPCODE_ORA_B 0xB0 // A | B
+#define OPCODE_ORA_C 0xB1 // A | C
+#define OPCODE_ORI 0xF6 // A | Immediate Byte
 
 // Struct for SAP-2:
 typedef struct sap1_state_t {

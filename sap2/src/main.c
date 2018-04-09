@@ -171,10 +171,12 @@ void loadprog_cma_test(sap_state_t *sap_state) {
         sap_state->ram[0x0054] = 0x50;
         sap_state->ram[0x0055] = 0x70;
 
-	sap_state->ram[0x0056] = OPCODE_ANI;
-        sap_state->ram[0x0057] = 0x3D;
+	sap_state->ram[0x0056] = OPCODE_ORI;
+        sap_state->ram[0x0057] = 0x6F;
 
-	sap_state->ram[0x0058] = OPCODE_HLT;
+	sap_state->ram[0x0058] = OPCODE_ORA_B;
+
+	sap_state->ram[0x0059] = OPCODE_HLT;
 
 	sap_state->ram[0x7050] = OPCODE_MVI_C;
         sap_state->ram[0x7051] = 0xF2;

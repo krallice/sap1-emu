@@ -281,10 +281,32 @@ void do_opcode_ani(sap_state_t *sap_state) {
 
 	uint8_t next_byte = sap_state->ram[++sap_state->pc];
 
-	printf("ANA: ANDing Accumulator ("BYTE_TO_BINARY_PATTERN") with next byte ("BYTE_TO_BINARY_PATTERN") with Result "BYTE_TO_BINARY_PATTERN"\n",
+	printf("ANI: ANDing Accumulator ("BYTE_TO_BINARY_PATTERN") with next byte ("BYTE_TO_BINARY_PATTERN") with Result "BYTE_TO_BINARY_PATTERN"\n",
 			BYTE_TO_BINARY(sap_state->a), BYTE_TO_BINARY(next_byte), BYTE_TO_BINARY(sap_state->a & next_byte));
 
 	sap_state->a = next_byte & sap_state->a;
+	set_flags(sap_state, &(sap_state->a));
+	sap_state->pc++;
+}
+
+void do_opcode_ora(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name) {
+
+	printf("ORA: ORing Register %s ("BYTE_TO_BINARY_PATTERN") with Accumulator ("BYTE_TO_BINARY_PATTERN") with Result "BYTE_TO_BINARY_PATTERN"\n",
+			src_reg_name, BYTE_TO_BINARY(*src_reg), BYTE_TO_BINARY(sap_state->a), BYTE_TO_BINARY((*src_reg | sap_state->a)));
+
+	sap_state->a = *src_reg | sap_state->a;
+	set_flags(sap_state, &(sap_state->a));
+	sap_state->pc++;
+}
+
+void do_opcode_ori(sap_state_t *sap_state) {
+
+	uint8_t next_byte = sap_state->ram[++sap_state->pc];
+
+	printf("ORI: ORing Accumulator ("BYTE_TO_BINARY_PATTERN") with next byte ("BYTE_TO_BINARY_PATTERN") with Result "BYTE_TO_BINARY_PATTERN"\n",
+			BYTE_TO_BINARY(sap_state->a), BYTE_TO_BINARY(next_byte), BYTE_TO_BINARY((sap_state->a | next_byte)));
+
+	sap_state->a = next_byte | sap_state->a;
 	set_flags(sap_state, &(sap_state->a));
 	sap_state->pc++;
 }
@@ -441,6 +463,18 @@ void execute_sap(sap_state_t *sap_state) {
 
 			case OPCODE_ANI:
 				do_opcode_ani(sap_state);
+				break;
+
+			case OPCODE_ORA_B:
+				do_opcode_ora(sap_state, &(sap_state->b), "B");
+				break;
+
+			case OPCODE_ORA_C:
+				do_opcode_ora(sap_state, &(sap_state->c), "C");
+				break;
+
+			case OPCODE_ORI:
+				do_opcode_ori(sap_state);
 				break;
 
 			default:
