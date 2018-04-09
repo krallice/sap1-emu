@@ -32,6 +32,7 @@
 #define OPCODE_JMP 0xC3 // Unconditional Jump
 #define OPCODE_JZ  0xCA // Jmp if Flag_Zero -= 0
 #define OPCODE_JNZ  0xC2 // Jmp if Flag_Zero != 0
+#define OPCODE_JM 0xFA // Jmp if Flag_Sign == 1
 
 #define OPCODE_CALL 0xCD // Call Function
 #define OPCODE_RET  0xC9 // Return to Caller

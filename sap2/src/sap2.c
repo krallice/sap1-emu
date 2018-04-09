@@ -203,6 +203,22 @@ void do_opcode_jnz(sap_state_t *sap_state) {
 	}
 }
 
+void do_opcode_jm(sap_state_t *sap_state) {
+
+	uint8_t lower_byte = sap_state->ram[++sap_state->pc];
+	uint8_t upper_byte = sap_state->ram[++sap_state->pc];
+	uint16_t jmp_address = (upper_byte << 8) | lower_byte;
+
+	if ( sap_state->flag_sign == 1 ) {
+		printf("JM: Setting PC to Address %.4x\n", jmp_address);
+		sap_state->pc = jmp_address;
+	} else {
+		printf("JM: Sign Flag not set. No jump taken\n");
+		sap_state->pc++;
+	}
+
+}
+
 void do_opcode_call(sap_state_t *sap_state) {
 
 	uint8_t lower_byte = sap_state->ram[++sap_state->pc];
@@ -262,6 +278,10 @@ void execute_sap(sap_state_t *sap_state) {
 
 			case OPCODE_JNZ:
 				do_opcode_jnz(sap_state);
+				break;
+
+			case OPCODE_JM:
+				do_opcode_jm(sap_state);
 				break;
 
 			case OPCODE_CALL:
