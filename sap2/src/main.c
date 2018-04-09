@@ -98,6 +98,55 @@ void loadprog_jnz_test(sap_state_t *sap_state) {
 	sap_state->ram[0x000B] = OPCODE_HLT;
 }
 
+void loadprog_sign_test(sap_state_t *sap_state) {
+
+	sap_state->ram[0x0001] = OPCODE_LDA;
+        sap_state->ram[0x0002] = 0x00;
+        sap_state->ram[0x0003] = 0x06;
+	
+	sap_state->ram[0x0004] = OPCODE_MOV_B_A;
+
+	sap_state->ram[0x0005] = OPCODE_JMP;
+        sap_state->ram[0x0006] = 0x05;
+        sap_state->ram[0x0007] = 0x03;
+
+	// Decrement until our sign bit is set:
+        sap_state->ram[0x0305] = OPCODE_DCR_B;
+        sap_state->ram[0x0306] = OPCODE_DCR_B;
+        sap_state->ram[0x0307] = OPCODE_DCR_B;
+        sap_state->ram[0x0308] = OPCODE_DCR_B;
+        sap_state->ram[0x0309] = OPCODE_DCR_B;
+
+	// Sign bit should be unset:
+	//sap_state->ram[0x030A] = OPCODE_MOV_C_A;
+        //sap_state->ram[0x030B] = OPCODE_INR_C;
+
+	sap_state->ram[0x030C] = OPCODE_HLT;
+
+        sap_state->ram[0x0600] = 0x03;
+}
+
+void loadprog_zero_test(sap_state_t *sap_state) {
+
+	sap_state->ram[0x0001] = OPCODE_LDA;
+        sap_state->ram[0x0002] = 0x00;
+        sap_state->ram[0x0003] = 0x06;
+
+	sap_state->ram[0x0004] = OPCODE_MOV_B_A;
+
+	sap_state->ram[0x0005] = OPCODE_JMP;
+        sap_state->ram[0x0006] = 0x05;
+        sap_state->ram[0x0007] = 0x03;
+
+        sap_state->ram[0x0305] = OPCODE_DCR_B;
+        sap_state->ram[0x0306] = OPCODE_DCR_B;
+        sap_state->ram[0x0307] = OPCODE_DCR_B; // Zero Flag should be set
+
+	sap_state->ram[0x0308] = OPCODE_HLT;
+
+        sap_state->ram[0x0600] = 0x03;
+}
+
 int main(void) {
 
 	// Init our SAP Microcontroller:
@@ -108,7 +157,9 @@ int main(void) {
 
 	//loadprog_lda_sta_5(sap_state);
 	//loadprog_call_ret(sap_state);
-	loadprog_jnz_test(sap_state);
+	//loadprog_jnz_test(sap_state);
+	loadprog_sign_test(sap_state);
+	//loadprog_zero_test(sap_state);
 
 	printf("\nDumping memory before execution:\n");
 	dump_sap_memory(sap_state);

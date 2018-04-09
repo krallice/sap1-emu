@@ -41,24 +41,33 @@ void dump_sap_state(sap_state_t *sap_state) {
 	printf("Register A (Accumulator): 0x%.2x\n", sap_state->a);
 	printf("Register B:\t\t0x%.2x\n", sap_state->b);
 	printf("Register C:\t\t0x%.2x\n", sap_state->c);
-	printf("Register TMP:\t\t0x%.2x\n", sap_state->tmp);
 	printf("Zero Flag:\t\t%d\n", sap_state->flag_zero);
 	printf("Sign Flag:\t\t%d\n", sap_state->flag_sign);
 	printf("Program Counter:\t0x%.4x\n", sap_state->pc);
 }
 
-void set_zero_flag(sap_state_t *sap_state, uint8_t *reg) {
+void set_zero_flag(sap_state_t *sap_state, int8_t *reg) {
 	
-	if (*reg == 0) {
+	if (*reg != 0) {
 		sap_state->flag_zero = 0;
 	} else {
 		sap_state->flag_zero = 1;
 	}
 }
 
-void set_flags(sap_state_t *sap_state, uint8_t *reg) {
+void set_sign_flag(sap_state_t *sap_state, int8_t *reg) {
+	
+	if (*reg >= 0) {
+		sap_state->flag_sign = 0;
+	} else {
+		sap_state->flag_sign = 1;
+	}
+}
+
+void set_flags(sap_state_t *sap_state, int8_t *reg) {
 
 	set_zero_flag(sap_state, reg);
+	set_sign_flag(sap_state, reg);
 }
 
 void do_opcode_hlt(sap_state_t *sap_state) {
@@ -71,7 +80,7 @@ void do_opcode_nop(sap_state_t *sap_state) {
 	sap_state->pc++;
 }
 
-void do_opcode_mvi(sap_state_t *sap_state, uint8_t *dst_reg, char *dst_reg_name) {
+void do_opcode_mvi(sap_state_t *sap_state, int8_t *dst_reg, char *dst_reg_name) {
 
 	++sap_state->pc;
 	printf("MVI: Move Value 0x%.2x into Register %s\n", sap_state->ram[sap_state->pc], dst_reg_name);
@@ -103,49 +112,49 @@ void do_opcode_sta(sap_state_t *sap_state) {
 	sap_state->pc++;
 }
 
-void do_opcode_add(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name) {
+void do_opcode_add(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name) {
 
 	printf("ADD: Adding Value (0x%.2x / %d) from Register %s to Accumulator (0x%.2x / %d) with Result (0x%.2x / %d)\n",
 			*src_reg, *src_reg, src_reg_name,
 			sap_state->a, sap_state->a,
-			(unsigned int)(sap_state->a + *src_reg), (unsigned int)(sap_state->a + *src_reg));
+			(signed int)(sap_state->a + *src_reg), (signed int)(sap_state->a + *src_reg));
 	sap_state->a += *src_reg;
 	set_flags(sap_state, &(sap_state->a));
 	sap_state->pc++;
 }
 
-void do_opcode_sub(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name) {
+void do_opcode_sub(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name) {
 
 	printf("SUB: Subtracting Value (0x%.2x / %d) in Register %s from Accumulator (0x%.2x / %d) with Result (0x%.2x / %d)\n",
 			*src_reg, *src_reg, src_reg_name,
 			sap_state->a, sap_state->a,
-			(unsigned int)(sap_state->a - *src_reg), (unsigned int)(sap_state->a - *src_reg));
+			(signed int)(sap_state->a - *src_reg), (signed int)(sap_state->a - *src_reg));
 	sap_state->a -= *src_reg;
 	set_flags(sap_state, &(sap_state->a));
 	sap_state->pc++;
 }
 
-void do_opcode_inr(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name) {
+void do_opcode_inr(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name) {
 
 	printf("INR: Incrementing Value (0x%.2x / %d) in Register %s to Value (0x%.2x / %d)\n",
 			*src_reg, *src_reg, src_reg_name,
-			(unsigned int)(*src_reg + 1), (unsigned int)(*src_reg + 1));
+			(signed int)(*src_reg + 1), (signed int)(*src_reg + 1));
 	++*src_reg;
 	set_flags(sap_state, src_reg);
 	sap_state->pc++;
 }
 
-void do_opcode_dcr(sap_state_t *sap_state, uint8_t *src_reg, char *src_reg_name) {
+void do_opcode_dcr(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name) {
 
 	printf("DCR: Decrementing Value (0x%.2x / %d) in Register %s to Value (0x%.2x / %d)\n",
 			*src_reg, *src_reg, src_reg_name,
-			(unsigned int)(*src_reg - 1), (unsigned int)(*src_reg - 1));
+			(signed int)(*src_reg - 1), (signed int)(*src_reg - 1));
 	--*src_reg;
 	set_flags(sap_state, src_reg);
 	sap_state->pc++;
 }
 
-void do_opcode_mov(sap_state_t *sap_state, uint8_t *dst_reg, char *dst_reg_name, uint8_t *src_reg, char *src_reg_name) {
+void do_opcode_mov(sap_state_t *sap_state, int8_t *dst_reg, char *dst_reg_name, int8_t *src_reg, char *src_reg_name) {
 
 	printf("MOV: Moving Value (0x%.2x / %d) from Register %s to Register %s\n",
 			*src_reg, *src_reg, src_reg_name,
@@ -359,6 +368,7 @@ void execute_sap(sap_state_t *sap_state) {
 				break;
 		}
 
-		usleep(1000000);
+		usleep(10000);
+		//usleep(1000000);
 	}
 }
