@@ -61,10 +61,9 @@
 typedef struct sap1_state_t {
 	uint16_t pc; // 16Bit Program Counter
 
-        uint8_t a; // 8Bit A Register
-        uint8_t b; // 8Bit B Register
-	uint8_t c; // 8Bit C Register
-	uint8_t tmp; // 8Bit TMP Register
+        int8_t a; // 8Bit A Register
+        int8_t b; // 8Bit B Register
+	int8_t c; // 8Bit C Register
 
 	uint8_t flag_sign :1; // 1Bit Sign Flag - Set when the Accumulator becomes <0
 	uint8_t flag_zero :1; // 1Bit Zero Flag - Set when the Accumulator becomes 0
