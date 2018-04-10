@@ -333,6 +333,24 @@ void do_opcode_xri(sap_state_t *sap_state) {
 	sap_state->pc++;
 }
 
+void do_opcode_ral(sap_state_t *sap_state) {
+
+	int8_t rotated = ((uint8_t)sap_state->a << 1) | ((uint8_t)sap_state->a >> (8 - 1));
+	printf("RAL: Rotating Accumulator Left "BYTE_TO_BINARY_PATTERN" -> "BYTE_TO_BINARY_PATTERN"\n",
+		BYTE_TO_BINARY(sap_state->a), BYTE_TO_BINARY(rotated));
+	sap_state->a = rotated;
+	sap_state->pc++;
+}
+
+void do_opcode_rar(sap_state_t *sap_state) {
+
+	int8_t rotated = ((uint8_t)sap_state->a >> 1) | ((uint8_t)sap_state->a << (8 - 1));
+	printf("RAR: Rotating Accumulator Right "BYTE_TO_BINARY_PATTERN" -> "BYTE_TO_BINARY_PATTERN"\n",
+		BYTE_TO_BINARY(sap_state->a), BYTE_TO_BINARY(rotated));
+	sap_state->a = rotated;
+	sap_state->pc++;
+}
+
 void execute_sap(sap_state_t *sap_state) {
 
 	#if SAP_DEBUG
@@ -509,6 +527,15 @@ void execute_sap(sap_state_t *sap_state) {
 
 			case OPCODE_XRI:
 				do_opcode_xri(sap_state);
+				break;
+
+			// Rotations:
+			case OPCODE_RAR:
+				do_opcode_rar(sap_state);
+				break;
+
+			case OPCODE_RAL:
+				do_opcode_ral(sap_state);
 				break;
 
 			default:

@@ -71,6 +71,9 @@
 #define OPCODE_XRA_C 0xA9 // A ^ C
 #define OPCODE_XRI 0xEE // A ^ Immediate Byte
 
+#define OPCODE_RAR 0x1F // Rotate Right
+#define OPCODE_RAL 0x17 // Rotate Left
+
 // Struct for SAP-2:
 typedef struct sap1_state_t {
 	uint16_t pc; // 16Bit Program Counter
