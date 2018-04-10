@@ -149,6 +149,7 @@ void loadprog_zero_test(sap_state_t *sap_state) {
 
 void loadprog_cma_test(sap_state_t *sap_state) {
 
+	// CMA Testing:
 	sap_state->ram[0x0000] = OPCODE_MVI_A;
 	sap_state->ram[0x0001] = 0x01;
 	sap_state->ram[0x0002] = OPCODE_CMA;
@@ -163,6 +164,7 @@ void loadprog_cma_test(sap_state_t *sap_state) {
         sap_state->ram[0x0008] = 0x50;
         sap_state->ram[0x0009] = 0x00;
 
+	// AND:
 	sap_state->ram[0x0050] = OPCODE_MVI_B;
         sap_state->ram[0x0051] = 0xE4;
 	sap_state->ram[0x0052] = OPCODE_ANA_B;
@@ -171,6 +173,8 @@ void loadprog_cma_test(sap_state_t *sap_state) {
         sap_state->ram[0x0054] = 0x50;
         sap_state->ram[0x0055] = 0x70;
 
+	// Return:
+	// OR:
 	sap_state->ram[0x0056] = OPCODE_ORI;
         sap_state->ram[0x0057] = 0x6F;
 
@@ -178,10 +182,20 @@ void loadprog_cma_test(sap_state_t *sap_state) {
 
 	sap_state->ram[0x0059] = OPCODE_HLT;
 
-	sap_state->ram[0x7050] = OPCODE_MVI_C;
-        sap_state->ram[0x7051] = 0xF2;
-	sap_state->ram[0x7052] = OPCODE_ANA_C;
-	sap_state->ram[0x7053] = OPCODE_RET;
+		// Func:
+		sap_state->ram[0x7050] = OPCODE_MVI_C;
+		sap_state->ram[0x7051] = 0xF2;
+		sap_state->ram[0x7052] = OPCODE_ANA_C;
+
+		sap_state->ram[0x7053] = OPCODE_MVI_C;
+		sap_state->ram[0x7054] = 0xB7;
+
+		// XOR:
+		sap_state->ram[0x7055] = OPCODE_XRA_C;
+		sap_state->ram[0x7056] = OPCODE_XRI;
+		sap_state->ram[0x7057] = 0x70;
+
+		sap_state->ram[0x7058] = OPCODE_RET;
 }
 
 int main(void) {

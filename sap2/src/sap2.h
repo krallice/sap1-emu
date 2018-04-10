@@ -67,6 +67,10 @@
 #define OPCODE_ORA_C 0xB1 // A | C
 #define OPCODE_ORI 0xF6 // A | Immediate Byte
 
+#define OPCODE_XRA_B 0xA8 // A ^ B
+#define OPCODE_XRA_C 0xA9 // A ^ C
+#define OPCODE_XRI 0xEE // A ^ Immediate Byte
+
 // Struct for SAP-2:
 typedef struct sap1_state_t {
 	uint16_t pc; // 16Bit Program Counter

@@ -311,6 +311,28 @@ void do_opcode_ori(sap_state_t *sap_state) {
 	sap_state->pc++;
 }
 
+void do_opcode_xra(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name) {
+
+	printf("XRA: XORing Register %s ("BYTE_TO_BINARY_PATTERN") with Accumulator ("BYTE_TO_BINARY_PATTERN") with Result "BYTE_TO_BINARY_PATTERN"\n",
+			src_reg_name, BYTE_TO_BINARY(*src_reg), BYTE_TO_BINARY(sap_state->a), BYTE_TO_BINARY((*src_reg ^ sap_state->a)));
+
+	sap_state->a = *src_reg ^ sap_state->a;
+	set_flags(sap_state, &(sap_state->a));
+	sap_state->pc++;
+}
+
+void do_opcode_xri(sap_state_t *sap_state) {
+
+	uint8_t next_byte = sap_state->ram[++sap_state->pc];
+
+	printf("XRI: XORing Accumulator ("BYTE_TO_BINARY_PATTERN") with next byte ("BYTE_TO_BINARY_PATTERN") with Result "BYTE_TO_BINARY_PATTERN"\n",
+			BYTE_TO_BINARY(sap_state->a), BYTE_TO_BINARY(next_byte), BYTE_TO_BINARY((sap_state->a ^ next_byte)));
+
+	sap_state->a = next_byte ^ sap_state->a;
+	set_flags(sap_state, &(sap_state->a));
+	sap_state->pc++;
+}
+
 void execute_sap(sap_state_t *sap_state) {
 
 	#if SAP_DEBUG
@@ -475,6 +497,18 @@ void execute_sap(sap_state_t *sap_state) {
 
 			case OPCODE_ORI:
 				do_opcode_ori(sap_state);
+				break;
+
+			case OPCODE_XRA_B:
+				do_opcode_xra(sap_state, &(sap_state->b), "B");
+				break;
+
+			case OPCODE_XRA_C:
+				do_opcode_xra(sap_state, &(sap_state->c), "C");
+				break;
+
+			case OPCODE_XRI:
+				do_opcode_xri(sap_state);
 				break;
 
 			default:
