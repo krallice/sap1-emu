@@ -233,11 +233,11 @@ int main(void) {
 
 	//loadprog_lda_sta_5(sap_state);
 	//loadprog_call_ret(sap_state);
-	//loadprog_jnz_test(sap_state);
+	loadprog_jnz_test(sap_state);
 	//loadprog_sign_test(sap_state);
 	//loadprog_zero_test(sap_state);
 	//loadprog_cma_test(sap_state);
-	loadprog_rar_test(sap_state);
+	//loadprog_rar_test(sap_state);
 
 	printf("\nDumping memory before execution:\n");
 	dump_sap_memory(sap_state);
