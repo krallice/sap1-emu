@@ -96,7 +96,10 @@ void loadprog_jnz_test(sap_state_t *sap_state) {
 	sap_state->ram[0x0009] = 0x06;
 	sap_state->ram[0x000A] = 0x00;
 
-	sap_state->ram[0x000B] = OPCODE_HLT;
+	sap_state->ram[0x000B] = OPCODE_MVI_L;
+        sap_state->ram[0x000C] = 0x07;
+
+	sap_state->ram[0x000D] = OPCODE_HLT;
 }
 
 void loadprog_sign_test(sap_state_t *sap_state) {

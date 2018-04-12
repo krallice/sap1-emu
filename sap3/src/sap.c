@@ -51,12 +51,21 @@ void dump_sap_memory(sap_state_t *sap_state) {
 void dump_sap_state(sap_state_t *sap_state) {
 
 	printf("\nDumping SAP State ::\n");
+
 	printf("Register A (Accumulator): 0x%.2x\n", (uint8_t)sap_state->a);
+
 	printf("Register B:\t\t0x%.2x\n", (uint8_t)sap_state->b);
 	printf("Register C:\t\t0x%.2x\n", (uint8_t)sap_state->c);
+	printf("Register D:\t\t0x%.2x\n", (uint8_t)sap_state->d);
+	printf("Register E:\t\t0x%.2x\n", (uint8_t)sap_state->e);
+	printf("Register H:\t\t0x%.2x\n", (uint8_t)sap_state->h);
+	printf("Register L:\t\t0x%.2x\n", (uint8_t)sap_state->l);
+
 	printf("Zero Flag:\t\t%d\n", sap_state->flag_zero);
 	printf("Sign Flag:\t\t%d\n", sap_state->flag_sign);
+
 	printf("Program Counter:\t0x%.4x\n", sap_state->pc);
+	printf("Stack Pointer:\t\t0x%.4x\n", sap_state->sp);
 }
 
 
@@ -117,6 +126,22 @@ void execute_sap(sap_state_t *sap_state) {
 
 			case OPCODE_MVI_C:
 				do_opcode_mvi(sap_state, &(sap_state->c), "C");
+				break;
+
+			case OPCODE_MVI_D:
+				do_opcode_mvi(sap_state, &(sap_state->d), "D");
+				break;
+
+			case OPCODE_MVI_E:
+				do_opcode_mvi(sap_state, &(sap_state->e), "E");
+				break;
+
+			case OPCODE_MVI_H:
+				do_opcode_mvi(sap_state, &(sap_state->h), "H");
+				break;
+
+			case OPCODE_MVI_L:
+				do_opcode_mvi(sap_state, &(sap_state->l), "L");
 				break;
 
 			case OPCODE_LDA:
@@ -181,6 +206,25 @@ void execute_sap(sap_state_t *sap_state) {
 				do_opcode_mov(sap_state, &(sap_state->a), "A", &(sap_state->c), "C");
 				break;
 
+			case OPCODE_MOV_A_D: 
+				do_opcode_mov(sap_state, &(sap_state->a), "A", &(sap_state->d), "D");
+				break;
+
+			case OPCODE_MOV_A_E: 
+				do_opcode_mov(sap_state, &(sap_state->a), "A", &(sap_state->e), "E");
+				break;
+
+			case OPCODE_MOV_A_H: 
+				do_opcode_mov(sap_state, &(sap_state->a), "A", &(sap_state->h), "H");
+				break;
+
+			case OPCODE_MOV_A_L: 
+				do_opcode_mov(sap_state, &(sap_state->a), "A", &(sap_state->l), "L");
+				break;
+
+
+
+
 			case OPCODE_MOV_B_A: 
 				do_opcode_mov(sap_state, &(sap_state->b), "B", &(sap_state->a), "A");
 				break;
@@ -189,6 +233,25 @@ void execute_sap(sap_state_t *sap_state) {
 				do_opcode_mov(sap_state, &(sap_state->b), "B", &(sap_state->c), "C");
 				break;
 
+			case OPCODE_MOV_B_D: 
+				do_opcode_mov(sap_state, &(sap_state->b), "B", &(sap_state->d), "D");
+				break;
+
+			case OPCODE_MOV_B_E: 
+				do_opcode_mov(sap_state, &(sap_state->b), "B", &(sap_state->e), "E");
+				break;
+
+			case OPCODE_MOV_B_H: 
+				do_opcode_mov(sap_state, &(sap_state->b), "B", &(sap_state->h), "H");
+				break;
+
+			case OPCODE_MOV_B_L: 
+				do_opcode_mov(sap_state, &(sap_state->b), "B", &(sap_state->l), "L");
+				break;
+
+
+
+
 			case OPCODE_MOV_C_A: 
 				do_opcode_mov(sap_state, &(sap_state->c), "C", &(sap_state->a), "A");
 				break;
@@ -196,6 +259,129 @@ void execute_sap(sap_state_t *sap_state) {
 			case OPCODE_MOV_C_B: 
 				do_opcode_mov(sap_state, &(sap_state->c), "C", &(sap_state->b), "B");
 				break;
+
+			case OPCODE_MOV_C_D: 
+				do_opcode_mov(sap_state, &(sap_state->c), "C", &(sap_state->d), "D");
+				break;
+
+			case OPCODE_MOV_C_E: 
+				do_opcode_mov(sap_state, &(sap_state->c), "C", &(sap_state->e), "E");
+				break;
+
+			case OPCODE_MOV_C_H: 
+				do_opcode_mov(sap_state, &(sap_state->c), "C", &(sap_state->h), "H");
+				break;
+
+			case OPCODE_MOV_C_L: 
+				do_opcode_mov(sap_state, &(sap_state->c), "C", &(sap_state->l), "L");
+				break;
+
+
+
+
+			case OPCODE_MOV_D_A: 
+				do_opcode_mov(sap_state, &(sap_state->d), "D", &(sap_state->a), "A");
+				break;
+
+			case OPCODE_MOV_D_B: 
+				do_opcode_mov(sap_state, &(sap_state->d), "D", &(sap_state->b), "B");
+				break;
+
+			case OPCODE_MOV_D_C: 
+				do_opcode_mov(sap_state, &(sap_state->d), "D", &(sap_state->c), "C");
+				break;
+
+			case OPCODE_MOV_D_E: 
+				do_opcode_mov(sap_state, &(sap_state->d), "D", &(sap_state->e), "E");
+				break;
+
+			case OPCODE_MOV_D_H: 
+				do_opcode_mov(sap_state, &(sap_state->d), "D", &(sap_state->h), "H");
+				break;
+
+			case OPCODE_MOV_D_L: 
+				do_opcode_mov(sap_state, &(sap_state->d), "D", &(sap_state->l), "L");
+				break;
+
+
+
+			case OPCODE_MOV_E_A: 
+				do_opcode_mov(sap_state, &(sap_state->e), "E", &(sap_state->a), "A");
+				break;
+
+			case OPCODE_MOV_E_B: 
+				do_opcode_mov(sap_state, &(sap_state->e), "E", &(sap_state->b), "B");
+				break;
+
+			case OPCODE_MOV_E_C: 
+				do_opcode_mov(sap_state, &(sap_state->e), "E", &(sap_state->c), "C");
+				break;
+
+			case OPCODE_MOV_E_D: 
+				do_opcode_mov(sap_state, &(sap_state->e), "E", &(sap_state->d), "D");
+				break;
+
+			case OPCODE_MOV_E_H: 
+				do_opcode_mov(sap_state, &(sap_state->e), "E", &(sap_state->h), "H");
+				break;
+
+			case OPCODE_MOV_E_L: 
+				do_opcode_mov(sap_state, &(sap_state->e), "E", &(sap_state->l), "L");
+				break;
+
+
+
+			case OPCODE_MOV_H_A: 
+				do_opcode_mov(sap_state, &(sap_state->h), "H", &(sap_state->a), "A");
+				break;
+
+			case OPCODE_MOV_H_B: 
+				do_opcode_mov(sap_state, &(sap_state->h), "H", &(sap_state->b), "B");
+				break;
+
+			case OPCODE_MOV_H_C: 
+				do_opcode_mov(sap_state, &(sap_state->h), "H", &(sap_state->c), "C");
+				break;
+
+			case OPCODE_MOV_H_D: 
+				do_opcode_mov(sap_state, &(sap_state->h), "H", &(sap_state->d), "D");
+				break;
+
+			case OPCODE_MOV_H_E: 
+				do_opcode_mov(sap_state, &(sap_state->h), "H", &(sap_state->e), "E");
+				break;
+
+			case OPCODE_MOV_H_L: 
+				do_opcode_mov(sap_state, &(sap_state->h), "H", &(sap_state->l), "L");
+				break;
+
+
+
+			case OPCODE_MOV_L_A: 
+				do_opcode_mov(sap_state, &(sap_state->l), "L", &(sap_state->a), "A");
+				break;
+
+			case OPCODE_MOV_L_B: 
+				do_opcode_mov(sap_state, &(sap_state->l), "L", &(sap_state->b), "B");
+				break;
+
+			case OPCODE_MOV_L_C: 
+				do_opcode_mov(sap_state, &(sap_state->l), "L", &(sap_state->c), "C");
+				break;
+
+			case OPCODE_MOV_L_D: 
+				do_opcode_mov(sap_state, &(sap_state->l), "L", &(sap_state->d), "D");
+				break;
+
+			case OPCODE_MOV_L_E: 
+				do_opcode_mov(sap_state, &(sap_state->l), "L", &(sap_state->e), "E");
+				break;
+
+			case OPCODE_MOV_L_H: 
+				do_opcode_mov(sap_state, &(sap_state->l), "L", &(sap_state->h), "H");
+				break;
+
+
 
 			// Logic:
 			case OPCODE_CMA:

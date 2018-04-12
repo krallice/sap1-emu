@@ -21,17 +21,30 @@
 
 // Struct for SAP-2:
 typedef struct sap3_state_t {
+
 	uint16_t pc; // 16Bit Program Counter
+	uint16_t sp; // 16Bit Stack Pointer
 
-        int8_t a; // 8Bit A Register
-        int8_t b; // 8Bit B Register
-	int8_t c; // 8Bit C Register
+	// General Purpose 8 Bit Registers:
+        int8_t a; // Accumulator
+        int8_t b;
+	int8_t c;
+        int8_t d;
+        int8_t e;
+	int8_t h;
+	int8_t l;
 
+	// Flag Register:
+	int8_t f;
+
+	// Marked for Decom:
 	uint8_t flag_sign :1; // 1Bit Sign Flag - Set when the Accumulator becomes <0
 	uint8_t flag_zero :1; // 1Bit Zero Flag - Set when the Accumulator becomes 0
+	uint8_t flag_carry :1; // 1Bit Zero Carry Flag - when the Accumulator becomes 0
 
 	uint8_t *ram; // Pointer to ram_size x 8bit RAM Words
 	uint16_t ram_size;
+
 } sap_state_t;
 
 sap_state_t *init_sap_state(void);
