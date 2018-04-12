@@ -1,23 +1,5 @@
-#ifndef SAP3_H
-#define SAP3_H
-
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-//typedef struct sap1_state_t sap_state_t;
-
-// Enable Debug Messages:
-#define SAP_DEBUG 1
-
-// n 8Bit RAM Addresses:
-#define SAP_RAM_SIZE 0xFFFF
-
-// 8Bit Opcode Definitions:
-#define OPCODE_MASK 0xF0
-#define OPERAND_MASK 0x0F
+#ifndef OPCODES_H
+#define OPCODES_H
 
 #define OPCODE_NOP 0x00 // No Execution
 #define OPCODE_HLT 0x76 // Halt Instruction Flow
@@ -74,28 +56,30 @@
 #define OPCODE_RAR 0x1F // Rotate Right
 #define OPCODE_RAL 0x17 // Rotate Left
 
-// Struct for SAP-2:
-typedef struct sap2_state_t {
-	uint16_t pc; // 16Bit Program Counter
+void do_opcode_hlt(sap_state_t *sap_state);
+void do_opcode_nop(sap_state_t *sap_state);
+void do_opcode_mvi(sap_state_t *sap_state, int8_t *dst_reg, char *dst_reg_name);
+void do_opcode_sta(sap_state_t *sap_state);
+void do_opcode_lda(sap_state_t *sap_state);
+void do_opcode_add(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
+void do_opcode_sub(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
+void do_opcode_inr(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
+void do_opcode_dcr(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
+void do_opcode_mov(sap_state_t *sap_state, int8_t *dst_reg, char *dst_reg_name, int8_t *src_reg, char *src_reg_name);
+void do_opcode_jmp(sap_state_t *sap_state);
+void do_opcode_jz(sap_state_t *sap_state);
+void do_opcode_jnz(sap_state_t *sap_state);
+void do_opcode_jm(sap_state_t *sap_state);
+void do_opcode_call(sap_state_t *sap_state);
+void do_opcode_ret(sap_state_t *sap_state);
+void do_opcode_cma(sap_state_t *sap_state);
+void do_opcode_ana(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
+void do_opcode_ani(sap_state_t *sap_state);
+void do_opcode_ora(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
+void do_opcode_ori(sap_state_t *sap_state);
+void do_opcode_xra(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
+void do_opcode_xri(sap_state_t *sap_state);
+void do_opcode_ral(sap_state_t *sap_state);
+void do_opcode_rar(sap_state_t *sap_state);
 
-        int8_t a; // 8Bit A Register
-        int8_t b; // 8Bit B Register
-	int8_t c; // 8Bit C Register
-
-	uint8_t flag_sign :1; // 1Bit Sign Flag - Set when the Accumulator becomes <0
-	uint8_t flag_zero :1; // 1Bit Zero Flag - Set when the Accumulator becomes 0
-
-	uint8_t *ram; // Pointer to ram_size x 8bit RAM Words
-	uint16_t ram_size;
-} sap_state_t;
-
-sap_state_t *init_sap_state(void);
-
-// Dump Memory:
-void dump_sap_memory(sap_state_t *sap_state);
-
-// Dump Structure State:
-void dump_sap_state(sap_state_t *sap_state);
-
-void execute_sap(sap_state_t *sap_state);
 #endif

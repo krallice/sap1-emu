@@ -1,5 +1,6 @@
 #include "main.h"
-#include "sap3.h"
+#include "sap.h"
+#include "opcode.h"
 
 void loadprog_lda_sta_5(sap_state_t *sap_state) {
 
