@@ -80,8 +80,8 @@ void loadprog_jnz_test(sap_state_t *sap_state) {
         sap_state->ram[0x0001] = 0x05;
 
 	// Multiplier B = 7:
-	sap_state->ram[0x0002] = OPCODE_MVI_B;
-        sap_state->ram[0x0003] = 0x07;
+	sap_state->ram[0x0002] = OPCODE_MVI_E;
+        sap_state->ram[0x0003] = 0x03;
 
 	// Product A = 0:
 	sap_state->ram[0x0004] = OPCODE_MVI_A;

@@ -223,8 +223,6 @@ void execute_sap(sap_state_t *sap_state) {
 				break;
 
 
-
-
 			case OPCODE_MOV_B_A: 
 				do_opcode_mov(sap_state, &(sap_state->b), "B", &(sap_state->a), "A");
 				break;
@@ -248,7 +246,6 @@ void execute_sap(sap_state_t *sap_state) {
 			case OPCODE_MOV_B_L: 
 				do_opcode_mov(sap_state, &(sap_state->b), "B", &(sap_state->l), "L");
 				break;
-
 
 
 
@@ -380,7 +377,6 @@ void execute_sap(sap_state_t *sap_state) {
 			case OPCODE_MOV_L_H: 
 				do_opcode_mov(sap_state, &(sap_state->l), "L", &(sap_state->h), "H");
 				break;
-
 
 
 			// Logic:
