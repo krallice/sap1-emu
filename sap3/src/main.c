@@ -360,20 +360,6 @@ int main(void) {
 	//loadprog_700_plus_900(sap_state);
 	loadprog_inr_test(sap_state);
 
-	// Add with Carry:
-	//int8_t a, b, result;
-	//uint8_t carry;
-	//a = 50;
-	//b = 100;
-
-	//carry = a > SCHAR_MAX - b;
-	//printf("Carry is %d\n", carry);
-	//result = a + b;
-	//carry = result < a;
-
-	//printf("Schar max is %d\n", SCHAR_MAX);
-	//printf("%d + %d = %d with carry flag %d\n", a, b, result, carry);
-
 	printf("\nDumping memory before execution:\n");
 	dump_sap_memory(sap_state);
 
