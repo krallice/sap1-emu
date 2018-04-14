@@ -54,11 +54,11 @@ void dump_sap_state(sap_state_t *sap_state) {
 
 	printf("Register A (Accumulator): 0x%.2x\n", (uint8_t)sap_state->a);
 
-	printf("Register B:\t\t0x%.2x\n", (uint8_t)sap_state->b);
+	printf("Register B:\t\t0x%.2x  (Register BC:0x%.2x%.2x)\n", (uint8_t)sap_state->b, (uint8_t)sap_state->b, (uint8_t)sap_state->c);
 	printf("Register C:\t\t0x%.2x\n", (uint8_t)sap_state->c);
-	printf("Register D:\t\t0x%.2x\n", (uint8_t)sap_state->d);
+	printf("Register D:\t\t0x%.2x  (Register DE:0x%.2x%.2x)\n", (uint8_t)sap_state->d, (uint8_t)sap_state->d, (uint8_t)sap_state->e);
 	printf("Register E:\t\t0x%.2x\n", (uint8_t)sap_state->e);
-	printf("Register H:\t\t0x%.2x\n", (uint8_t)sap_state->h);
+	printf("Register H:\t\t0x%.2x  (Register HL:0x%.2x%.2x)\n", (uint8_t)sap_state->h, (uint8_t)sap_state->h, (uint8_t)sap_state->l);
 	printf("Register L:\t\t0x%.2x\n", (uint8_t)sap_state->l);
 
 	printf("Zero Flag:\t\t%d\n", sap_state->flag_zero);
