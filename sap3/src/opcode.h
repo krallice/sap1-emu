@@ -6,6 +6,8 @@
 #define OPCODE_NOP 0x00 // No Execution
 #define OPCODE_HLT 0x76 // Halt Instruction Flow
 
+#define OPCODE_OUT 0xD3 // OUT (Incomplete Implementation, currently used as a diag dump)
+
 // MVI_<Register> <Value>
 // Move Immediate Next Byte Value into <Register>. 2 Byte Instruction
 #define OPCODE_MVI_A 0x3E
@@ -110,6 +112,7 @@
 
 void do_opcode_hlt(sap_state_t *sap_state);
 void do_opcode_nop(sap_state_t *sap_state);
+void do_opcode_out(sap_state_t *sap_state);
 void do_opcode_mvi(sap_state_t *sap_state, int8_t *dst_reg, char *dst_reg_name);
 void do_opcode_sta(sap_state_t *sap_state);
 void do_opcode_lda(sap_state_t *sap_state);

@@ -19,6 +19,15 @@ void do_opcode_hlt(sap_state_t *sap_state) {
 	#endif
 }
 
+void do_opcode_out(sap_state_t *sap_state) {
+	#ifdef OPCODE_DEBUG
+	printf("OUT: Dumping Processor State:\n\n");
+	dump_sap_state(sap_state);
+	printf("\n");
+	#endif
+	sap_state->pc++;
+}
+
 void do_opcode_nop(sap_state_t *sap_state) {
 
 	#ifdef OPCODE_DEBUG
@@ -73,6 +82,7 @@ void do_opcode_add(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name) 
 			sap_state->a, sap_state->a,
 			(signed int)(sap_state->a + *src_reg), (signed int)(sap_state->a + *src_reg));
 	#endif
+	set_carry_flag_add(sap_state, &(sap_state->a), src_reg);
 	sap_state->a += *src_reg;
 	set_flags(sap_state, &(sap_state->a));
 	sap_state->pc++;
@@ -86,6 +96,7 @@ void do_opcode_sub(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name) 
 			sap_state->a, sap_state->a,
 			(signed int)(sap_state->a - *src_reg), (signed int)(sap_state->a - *src_reg));
 	#endif
+	set_carry_flag_sub(sap_state, &(sap_state->a), src_reg);
 	sap_state->a -= *src_reg;
 	set_flags(sap_state, &(sap_state->a));
 	sap_state->pc++;

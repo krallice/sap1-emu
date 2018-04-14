@@ -40,7 +40,7 @@ typedef struct sap3_state_t {
 	// Marked for Decom:
 	uint8_t flag_sign :1; // 1Bit Sign Flag - Set when the Accumulator becomes <0
 	uint8_t flag_zero :1; // 1Bit Zero Flag - Set when the Accumulator becomes 0
-	uint8_t flag_carry :1; // 1Bit Zero Carry Flag - when the Accumulator becomes 0
+	uint8_t flag_carry :1; // 1Bit Carry Flag - When the Accumulator Overflows
 
 	uint8_t *ram; // Pointer to ram_size x 8bit RAM Words
 	uint16_t ram_size;

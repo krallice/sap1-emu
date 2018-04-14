@@ -50,7 +50,6 @@ void dump_sap_memory(sap_state_t *sap_state) {
 
 void dump_sap_state(sap_state_t *sap_state) {
 
-	printf("\nDumping SAP State ::\n");
 
 	printf("Register A (Accumulator): 0x%.2x\n", (uint8_t)sap_state->a);
 
@@ -63,6 +62,7 @@ void dump_sap_state(sap_state_t *sap_state) {
 
 	printf("Zero Flag:\t\t%d\n", sap_state->flag_zero);
 	printf("Sign Flag:\t\t%d\n", sap_state->flag_sign);
+	printf("Carry Flag:\t\t%d\n", sap_state->flag_carry);
 
 	printf("Program Counter:\t0x%.4x\n", sap_state->pc);
 	printf("Stack Pointer:\t\t0x%.4x\n", sap_state->sp);
@@ -88,6 +88,10 @@ void execute_sap(sap_state_t *sap_state) {
 
 			case OPCODE_NOP:
 				do_opcode_nop(sap_state);
+				break;
+
+			case OPCODE_OUT:
+				do_opcode_out(sap_state);
 				break;
 
 			// Jumps:

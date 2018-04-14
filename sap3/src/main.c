@@ -1,4 +1,5 @@
 #include "main.h"
+#include <limits.h>
 #include "sap.h"
 #include "opcode.h"
 
@@ -227,6 +228,48 @@ void loadprog_rar_test(sap_state_t *sap_state) {
 	sap_state->ram[0x000F] = OPCODE_HLT;
 }
 
+void loadprog_carry_test(sap_state_t *sap_state) {
+
+	sap_state->ram[0x0000] = OPCODE_MVI_A; // All Flags should be 0
+	sap_state->ram[0x0001] = 0x30;
+	sap_state->ram[0x0002] = OPCODE_MVI_B;
+	sap_state->ram[0x0003] = 0x20;
+	sap_state->ram[0x0004] = OPCODE_ADD_B;
+	sap_state->ram[0x0005] = OPCODE_OUT;
+
+	sap_state->ram[0x0006] = OPCODE_MVI_A; // Zero Flag should be 1
+	sap_state->ram[0x0007] = 0xFE;
+	sap_state->ram[0x0008] = OPCODE_MVI_B;
+	sap_state->ram[0x0009] = 0x02;
+	sap_state->ram[0x000A] = OPCODE_ADD_B;
+	sap_state->ram[0x000B] = OPCODE_OUT;
+
+	/*
+	sap_state->ram[0x000C] = OPCODE_MVI_A; // Sign Flag should be 1
+	sap_state->ram[0x000D] = 0xFE;
+	sap_state->ram[0x000E] = OPCODE_MVI_B;
+	sap_state->ram[0x000F] = 0x01;
+	sap_state->ram[0x0010] = OPCODE_ADD_B;
+	sap_state->ram[0x0011] = OPCODE_OUT;
+
+	sap_state->ram[0x0012] = OPCODE_MVI_A; // Sign Flag should be 1
+	sap_state->ram[0x0013] = 0xFE;
+	sap_state->ram[0x0014] = OPCODE_MVI_B;
+	sap_state->ram[0x0015] = 0x0A;
+	sap_state->ram[0x0016] = OPCODE_ADD_B;
+	sap_state->ram[0x0017] = OPCODE_OUT;
+	*/
+
+	sap_state->ram[0x0018] = OPCODE_MVI_A; // Sign Flag should be 1
+	sap_state->ram[0x0019] = 0x03;
+	sap_state->ram[0x001A] = OPCODE_MVI_B;
+	sap_state->ram[0x001B] = 0x05;
+	sap_state->ram[0x001C] = OPCODE_SUB_B;
+	sap_state->ram[0x001D] = OPCODE_OUT;
+
+	sap_state->ram[0x0020] = OPCODE_HLT;
+}
+
 int main(void) {
 
 	// Init our SAP Microcontroller:
@@ -237,11 +280,26 @@ int main(void) {
 
 	//loadprog_lda_sta_5(sap_state);
 	//loadprog_call_ret(sap_state);
-	loadprog_jnz_test(sap_state);
+	//loadprog_jnz_test(sap_state);
 	//loadprog_sign_test(sap_state);
 	//loadprog_zero_test(sap_state);
 	//loadprog_cma_test(sap_state);
 	//loadprog_rar_test(sap_state);
+	loadprog_carry_test(sap_state);
+
+	// Add with Carry:
+	//int8_t a, b, result;
+	//uint8_t carry;
+	//a = 50;
+	//b = 100;
+
+	//carry = a > SCHAR_MAX - b;
+	//printf("Carry is %d\n", carry);
+	//result = a + b;
+	//carry = result < a;
+
+	//printf("Schar max is %d\n", SCHAR_MAX);
+	//printf("%d + %d = %d with carry flag %d\n", a, b, result, carry);
 
 	printf("\nDumping memory before execution:\n");
 	dump_sap_memory(sap_state);
@@ -250,6 +308,7 @@ int main(void) {
 	execute_sap(sap_state);
 
 	// Dump State:
+	printf("\nDumping SAP State ::\n");
 	dump_sap_state(sap_state);
 
 	return 0;
