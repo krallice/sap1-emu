@@ -20,13 +20,14 @@ void clear_carry_flag(sap_state_t *sap_state) {
 	sap_state->flag_carry = 0;
 }
 
-uint8_t returnset_carry_flag(sap_state_t *sap_state) {
+void reset_carry_flag(sap_state_t *sap_state) {
 
-	uint8_t val = sap_state->flag_carry;
 	if ( sap_state->flag_carry == 1 ) {
+		#ifdef FLAG_DEBUG
+		printf("\tFlipping Carry Flag back to Zero\n");
+		#endif
 		sap_state->flag_carry = 0;
 	}
-	return val;
 }
 
 void set_zero_flag(sap_state_t *sap_state, int8_t *reg) {

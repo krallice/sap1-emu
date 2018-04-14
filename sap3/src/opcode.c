@@ -88,6 +88,21 @@ void do_opcode_add(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name) 
 	sap_state->pc++;
 }
 
+void do_opcode_adc(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name) {
+
+	#ifdef OPCODE_DEBUG
+	printf("ADC: Adding Value (0x%.2x / %d) from Register %s with Carry Flag %d to Accumulator (0x%.2x / %d) with Result (0x%.2x / %d)\n",
+			*src_reg, *src_reg, src_reg_name, sap_state->flag_carry,
+			sap_state->a, sap_state->a,
+			(signed int)(sap_state->a + *src_reg), (signed int)(sap_state->a + *src_reg + sap_state->flag_carry));
+	#endif
+	sap_state->a += (*src_reg + sap_state->flag_carry);
+	//set_carry_flag_add(sap_state, &(sap_state->a), src_reg);
+	reset_carry_flag(sap_state);
+	set_flags(sap_state, &(sap_state->a));
+	sap_state->pc++;
+}
+
 void do_opcode_sub(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name) {
 
 	#ifdef OPCODE_DEBUG
@@ -98,6 +113,21 @@ void do_opcode_sub(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name) 
 	#endif
 	set_carry_flag_sub(sap_state, &(sap_state->a), src_reg);
 	sap_state->a -= *src_reg;
+	set_flags(sap_state, &(sap_state->a));
+	sap_state->pc++;
+}
+
+void do_opcode_sbb(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name) {
+
+	#ifdef OPCODE_DEBUG
+	printf("SBB: Subtracting Value (0x%.2x / %d) in Register %s with Carry Flag %d from Accumulator (0x%.2x / %d) with Result (0x%.2x / %d)\n",
+			*src_reg, *src_reg, src_reg_name, sap_state->flag_carry,
+			sap_state->a, sap_state->a,
+			(signed int)(sap_state->a - *src_reg), (signed int)(sap_state->a - *src_reg));
+	#endif
+	sap_state->a -= (*src_reg + sap_state->flag_carry);
+	//set_carry_flag_sub(sap_state, &(sap_state->a), src_reg);
+	reset_carry_flag(sap_state);
 	set_flags(sap_state, &(sap_state->a));
 	sap_state->pc++;
 }

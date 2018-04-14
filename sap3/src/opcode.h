@@ -69,6 +69,42 @@
 #define OPCODE_MOV_L_E 0x6B
 #define OPCODE_MOV_L_H 0x6C
 
+// ADD:
+#define OPCODE_ADD_A 0x87
+#define OPCODE_ADD_B 0x80
+#define OPCODE_ADD_C 0x81
+#define OPCODE_ADD_D 0x82
+#define OPCODE_ADD_E 0x83
+#define OPCODE_ADD_H 0x84
+#define OPCODE_ADD_L 0x85
+
+// ADD With Carrys:
+#define OPCODE_ADC_A 0x8F
+#define OPCODE_ADC_B 0x88
+#define OPCODE_ADC_C 0x89
+#define OPCODE_ADC_D 0x8A
+#define OPCODE_ADC_E 0x8B
+#define OPCODE_ADC_H 0x8C
+#define OPCODE_ADC_L 0x8D
+
+// SUBtraction:
+#define OPCODE_SUB_A 0x97
+#define OPCODE_SUB_B 0x90
+#define OPCODE_SUB_C 0x91
+#define OPCODE_SUB_D 0x92
+#define OPCODE_SUB_E 0x93
+#define OPCODE_SUB_H 0x94
+#define OPCODE_SUB_L 0x95
+
+// SUBtraction with Borrow/Carry:
+#define OPCODE_SBB_A 0x9F
+#define OPCODE_SBB_B 0x98
+#define OPCODE_SBB_C 0x99
+#define OPCODE_SBB_D 0x9A
+#define OPCODE_SBB_E 0x9B
+#define OPCODE_SBB_H 0x9C
+#define OPCODE_SBB_L 0x9D
+
 #define OPCODE_LDA 0x3A // Load the following 16Bit (2 Byte) Memory Address into the Accumulator. 3 Byte Instruction.
 #define OPCODE_STA 0x32 // Store the Accumulator into the following 16Bit (2 Byte) Memory Address. 3 Byte Instruction.
 
@@ -79,12 +115,6 @@
 
 #define OPCODE_CALL 0xCD // Call Function
 #define OPCODE_RET  0xC9 // Return to Caller
-
-#define OPCODE_ADD_B 0x80 // Add the value in Register (B|C) to Accumulator
-#define OPCODE_ADD_C 0x81
-
-#define OPCODE_SUB_B 0x90 // Substract the value in Reg (B|C) from Accumulator
-#define OPCODE_SUB_C 0x91
 
 #define OPCODE_INR_A 0x3C // Increment Registers by 1:
 #define OPCODE_INR_B 0x04
@@ -117,6 +147,7 @@ void do_opcode_mvi(sap_state_t *sap_state, int8_t *dst_reg, char *dst_reg_name);
 void do_opcode_sta(sap_state_t *sap_state);
 void do_opcode_lda(sap_state_t *sap_state);
 void do_opcode_add(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
+void do_opcode_adc(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
 void do_opcode_sub(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
 void do_opcode_inr(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
 void do_opcode_dcr(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);

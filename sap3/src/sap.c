@@ -157,7 +157,15 @@ void execute_sap(sap_state_t *sap_state) {
 				do_opcode_sta(sap_state);
 				break;
 
+
+
+
+
 			// Adds:
+			case OPCODE_ADD_A:
+				do_opcode_add(sap_state, &(sap_state->a), "A");
+				break;
+
 			case OPCODE_ADD_B:
 				do_opcode_add(sap_state, &(sap_state->b), "B");
 				break;
@@ -166,7 +174,58 @@ void execute_sap(sap_state_t *sap_state) {
 				do_opcode_add(sap_state, &(sap_state->c), "C");
 				break;
 
+			case OPCODE_ADD_D:
+				do_opcode_add(sap_state, &(sap_state->d), "D");
+				break;
+
+			case OPCODE_ADD_E:
+				do_opcode_add(sap_state, &(sap_state->e), "E");
+				break;
+
+			case OPCODE_ADD_H:
+				do_opcode_add(sap_state, &(sap_state->h), "H");
+				break;
+
+			case OPCODE_ADD_L:
+				do_opcode_add(sap_state, &(sap_state->l), "L");
+				break;
+
+			case OPCODE_ADC_A:
+				do_opcode_adc(sap_state, &(sap_state->a), "A");
+				break;
+
+			case OPCODE_ADC_B:
+				do_opcode_adc(sap_state, &(sap_state->b), "B");
+				break;
+
+			case OPCODE_ADC_C:
+				do_opcode_adc(sap_state, &(sap_state->c), "C");
+				break;
+
+			case OPCODE_ADC_D:
+				do_opcode_adc(sap_state, &(sap_state->d), "D");
+				break;
+
+			case OPCODE_ADC_E:
+				do_opcode_adc(sap_state, &(sap_state->e), "E");
+				break;
+
+			case OPCODE_ADC_H:
+				do_opcode_adc(sap_state, &(sap_state->h), "H");
+				break;
+
+			case OPCODE_ADC_L:
+				do_opcode_adc(sap_state, &(sap_state->l), "L");
+				break;
+
+
+
+
 			// Subtraction:
+			case OPCODE_SUB_A:
+				do_opcode_sub(sap_state, &(sap_state->a), "A");
+				break;
+
 			case OPCODE_SUB_B:
 				do_opcode_sub(sap_state, &(sap_state->b), "B");
 				break;
@@ -174,6 +233,33 @@ void execute_sap(sap_state_t *sap_state) {
 			case OPCODE_SUB_C:
 				do_opcode_sub(sap_state, &(sap_state->c), "C");
 				break;
+
+			case OPCODE_SUB_D:
+				do_opcode_sub(sap_state, &(sap_state->d), "D");
+				break;
+
+			case OPCODE_SUB_E:
+				do_opcode_sub(sap_state, &(sap_state->e), "E");
+				break;
+
+			case OPCODE_SUB_H:
+				do_opcode_sub(sap_state, &(sap_state->h), "H");
+				break;
+
+			case OPCODE_SUB_L:
+				do_opcode_sub(sap_state, &(sap_state->l), "L");
+				break;
+
+
+
+
+
+
+
+
+
+
+
 
 			// Increments:
 			case OPCODE_INR_A:

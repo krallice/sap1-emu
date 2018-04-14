@@ -13,5 +13,5 @@ void set_carry_flag_add(sap_state_t *sap_state, int8_t *r1, int8_t *r2);
 void set_carry_flag_sub(sap_state_t *sap_state, int8_t *r1, int8_t *r2);
 
 uint8_t returnset_carry_flag(sap_state_t *sap_state);
-void clear_carry_flag(sap_state_t *sap_state);
+void reset_carry_flag(sap_state_t *sap_state);
 #endif

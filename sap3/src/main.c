@@ -228,20 +228,35 @@ void loadprog_rar_test(sap_state_t *sap_state) {
 	sap_state->ram[0x000F] = OPCODE_HLT;
 }
 
+void loadprog_fib(sap_state_t *sap_state) {
+
+	sap_state->ram[0x0000] = OPCODE_MVI_B;
+	sap_state->ram[0x0001] = 0x00;
+
+	sap_state->ram[0x0000] = OPCODE_STA;
+	sap_state->ram[0x0001] = 0x00;
+	sap_state->ram[0x0002] = 0x0B;
+
+	sap_state->ram[0x0002] = OPCODE_OUT;
+
+	// .data:
+	sap_state->ram[0x0B00] = 0x00;
+
+
+}
+
 void loadprog_carry_test(sap_state_t *sap_state) {
 
 	sap_state->ram[0x0000] = OPCODE_MVI_A; // All Flags should be 0
-	sap_state->ram[0x0001] = 0x30;
+	sap_state->ram[0x0001] = 0xFE;
 	sap_state->ram[0x0002] = OPCODE_MVI_B;
-	sap_state->ram[0x0003] = 0x20;
+	sap_state->ram[0x0003] = 0x02;
 	sap_state->ram[0x0004] = OPCODE_ADD_B;
 	sap_state->ram[0x0005] = OPCODE_OUT;
 
-	sap_state->ram[0x0006] = OPCODE_MVI_A; // Zero Flag should be 1
-	sap_state->ram[0x0007] = 0xFE;
 	sap_state->ram[0x0008] = OPCODE_MVI_B;
 	sap_state->ram[0x0009] = 0x02;
-	sap_state->ram[0x000A] = OPCODE_ADD_B;
+	sap_state->ram[0x000A] = OPCODE_ADC_B;
 	sap_state->ram[0x000B] = OPCODE_OUT;
 
 	/*
@@ -260,14 +275,56 @@ void loadprog_carry_test(sap_state_t *sap_state) {
 	sap_state->ram[0x0017] = OPCODE_OUT;
 	*/
 
+	/*
 	sap_state->ram[0x0018] = OPCODE_MVI_A; // Sign Flag should be 1
 	sap_state->ram[0x0019] = 0x03;
 	sap_state->ram[0x001A] = OPCODE_MVI_B;
 	sap_state->ram[0x001B] = 0x05;
 	sap_state->ram[0x001C] = OPCODE_SUB_B;
 	sap_state->ram[0x001D] = OPCODE_OUT;
+	*/
 
 	sap_state->ram[0x0020] = OPCODE_HLT;
+}
+
+void loadprog_700_plus_900(sap_state_t *sap_state) {
+
+	// 700:
+	sap_state->ram[0x0000] = OPCODE_MVI_B;
+	sap_state->ram[0x0001] = 0x02;
+	sap_state->ram[0x0002] = OPCODE_MVI_C;
+	sap_state->ram[0x0003] = 0xBC;
+	sap_state->ram[0x0004] = OPCODE_OUT;
+
+	// 900:
+	sap_state->ram[0x0005] = OPCODE_MVI_D;
+	sap_state->ram[0x0006] = 0x03;
+	sap_state->ram[0x0007] = OPCODE_MVI_E;
+	sap_state->ram[0x0008] = 0x84;
+	sap_state->ram[0x0009] = OPCODE_OUT;
+
+	// Add our Lower Bytes:
+	sap_state->ram[0x000A] = OPCODE_ADD_C;
+	sap_state->ram[0x000B] = OPCODE_ADD_E;
+	sap_state->ram[0x000C] = OPCODE_OUT;
+
+	// Save our summed lower byte into L:
+	sap_state->ram[0x000D] = OPCODE_MOV_L_A;
+	sap_state->ram[0x000E] = OPCODE_MVI_A;
+	sap_state->ram[0x000F] = 0x00;
+	sap_state->ram[0x0010] = OPCODE_OUT;
+
+	// Upper byte add with carry:
+	sap_state->ram[0x0011] = OPCODE_ADC_B;
+	sap_state->ram[0x0012] = OPCODE_OUT;
+	// Upper byte add:
+	sap_state->ram[0x0013] = OPCODE_ADD_D;
+	sap_state->ram[0x0014] = OPCODE_OUT;
+
+	// Move High Byte into H:
+	sap_state->ram[0x0015] = OPCODE_MOV_H_A;
+
+	sap_state->ram[0x0019] = OPCODE_HLT;
 }
 
 int main(void) {
@@ -285,7 +342,8 @@ int main(void) {
 	//loadprog_zero_test(sap_state);
 	//loadprog_cma_test(sap_state);
 	//loadprog_rar_test(sap_state);
-	loadprog_carry_test(sap_state);
+	//loadprog_carry_test(sap_state);
+	loadprog_700_plus_900(sap_state);
 
 	// Add with Carry:
 	//int8_t a, b, result;
