@@ -105,6 +105,24 @@
 #define OPCODE_SBB_H 0x9C
 #define OPCODE_SBB_L 0x9D
 
+// Increment Registers by 1:
+#define OPCODE_INR_A 0x3C 
+#define OPCODE_INR_B 0x04
+#define OPCODE_INR_C 0x0C
+#define OPCODE_INR_D 0x14
+#define OPCODE_INR_E 0x1C
+#define OPCODE_INR_H 0x24
+#define OPCODE_INR_L 0x2C
+
+// Decrement Registers by 1:
+#define OPCODE_DCR_A 0x3D 
+#define OPCODE_DCR_B 0x05
+#define OPCODE_DCR_C 0x0D
+#define OPCODE_DCR_D 0x15
+#define OPCODE_DCR_E 0x1D
+#define OPCODE_DCR_H 0x25
+#define OPCODE_DCR_L 0x2D
+
 #define OPCODE_LDA 0x3A // Load the following 16Bit (2 Byte) Memory Address into the Accumulator. 3 Byte Instruction.
 #define OPCODE_STA 0x32 // Store the Accumulator into the following 16Bit (2 Byte) Memory Address. 3 Byte Instruction.
 
@@ -116,13 +134,7 @@
 #define OPCODE_CALL 0xCD // Call Function
 #define OPCODE_RET  0xC9 // Return to Caller
 
-#define OPCODE_INR_A 0x3C // Increment Registers by 1:
-#define OPCODE_INR_B 0x04
-#define OPCODE_INR_C 0x0C
 
-#define OPCODE_DCR_A 0x3D // Decrement Registers by 1:
-#define OPCODE_DCR_B 0x05
-#define OPCODE_DCR_C 0x0D
 
 #define OPCODE_CMA 0x2F // Complement the Accumulator
 #define OPCODE_ANA_B 0xA0 // A & B
@@ -149,6 +161,7 @@ void do_opcode_lda(sap_state_t *sap_state);
 void do_opcode_add(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
 void do_opcode_adc(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
 void do_opcode_sub(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
+void do_opcode_sbb(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
 void do_opcode_inr(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
 void do_opcode_dcr(sap_state_t *sap_state, int8_t *src_reg, char *src_reg_name);
 void do_opcode_mov(sap_state_t *sap_state, int8_t *dst_reg, char *dst_reg_name, int8_t *src_reg, char *src_reg_name);

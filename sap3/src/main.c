@@ -327,6 +327,20 @@ void loadprog_700_plus_900(sap_state_t *sap_state) {
 	sap_state->ram[0x0019] = OPCODE_HLT;
 }
 
+void loadprog_inr_test(sap_state_t *sap_state) {
+
+	sap_state->ram[0x0000] = OPCODE_MVI_B;
+	sap_state->ram[0x0001] = 0x01;
+
+	sap_state->ram[0x0002] = OPCODE_DCR_B;
+	sap_state->ram[0x0003] = OPCODE_OUT;
+
+	sap_state->ram[0x0004] = OPCODE_DCR_B;
+	sap_state->ram[0x0005] = OPCODE_OUT;
+
+	sap_state->ram[0x0006] = OPCODE_HLT;
+}
+
 int main(void) {
 
 	// Init our SAP Microcontroller:
@@ -343,7 +357,8 @@ int main(void) {
 	//loadprog_cma_test(sap_state);
 	//loadprog_rar_test(sap_state);
 	//loadprog_carry_test(sap_state);
-	loadprog_700_plus_900(sap_state);
+	//loadprog_700_plus_900(sap_state);
+	loadprog_inr_test(sap_state);
 
 	// Add with Carry:
 	//int8_t a, b, result;

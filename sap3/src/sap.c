@@ -220,7 +220,6 @@ void execute_sap(sap_state_t *sap_state) {
 
 
 
-
 			// Subtraction:
 			case OPCODE_SUB_A:
 				do_opcode_sub(sap_state, &(sap_state->a), "A");
@@ -250,11 +249,33 @@ void execute_sap(sap_state_t *sap_state) {
 				do_opcode_sub(sap_state, &(sap_state->l), "L");
 				break;
 
+			case OPCODE_SBB_A:
+				do_opcode_sbb(sap_state, &(sap_state->a), "A");
+				break;
 
+			case OPCODE_SBB_B:
+				do_opcode_sbb(sap_state, &(sap_state->b), "B");
+				break;
 
+			case OPCODE_SBB_C:
+				do_opcode_sbb(sap_state, &(sap_state->c), "C");
+				break;
 
+			case OPCODE_SBB_D:
+				do_opcode_sbb(sap_state, &(sap_state->d), "D");
+				break;
 
+			case OPCODE_SBB_E:
+				do_opcode_sbb(sap_state, &(sap_state->e), "E");
+				break;
 
+			case OPCODE_SBB_H:
+				do_opcode_sbb(sap_state, &(sap_state->h), "H");
+				break;
+
+			case OPCODE_SBB_L:
+				do_opcode_sbb(sap_state, &(sap_state->l), "L");
+				break;
 
 
 
@@ -274,6 +295,22 @@ void execute_sap(sap_state_t *sap_state) {
 				do_opcode_inr(sap_state, &(sap_state->c), "C");
 				break;
 
+			case OPCODE_INR_D:
+				do_opcode_inr(sap_state, &(sap_state->d), "D");
+				break;
+
+			case OPCODE_INR_E:
+				do_opcode_inr(sap_state, &(sap_state->e), "E");
+				break;
+
+			case OPCODE_INR_H:
+				do_opcode_inr(sap_state, &(sap_state->h), "H");
+				break;
+
+			case OPCODE_INR_L:
+				do_opcode_inr(sap_state, &(sap_state->l), "L");
+				break;
+
 			// Decrements:
 			case OPCODE_DCR_A:
 				do_opcode_dcr(sap_state, &(sap_state->a), "A");
@@ -286,6 +323,29 @@ void execute_sap(sap_state_t *sap_state) {
 			case OPCODE_DCR_C:
 				do_opcode_dcr(sap_state, &(sap_state->c), "C");
 				break;
+
+			case OPCODE_DCR_D:
+				do_opcode_dcr(sap_state, &(sap_state->d), "D");
+				break;
+
+			case OPCODE_DCR_E:
+				do_opcode_dcr(sap_state, &(sap_state->e), "E");
+				break;
+
+			case OPCODE_DCR_H:
+				do_opcode_dcr(sap_state, &(sap_state->h), "H");
+				break;
+
+			case OPCODE_DCR_L:
+				do_opcode_dcr(sap_state, &(sap_state->l), "L");
+				break;
+
+
+
+
+
+
+
 
 			// Moves:
 			case OPCODE_MOV_A_B: 
