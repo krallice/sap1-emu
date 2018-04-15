@@ -1,7 +1,4 @@
 #include "main.h"
-#include <limits.h>
-#include "sap.h"
-#include "opcode.h"
 
 void loadprog_lda_sta_5(sap_state_t *sap_state) {
 
@@ -341,7 +338,11 @@ void loadprog_inr_test(sap_state_t *sap_state) {
 	sap_state->ram[0x0006] = OPCODE_HLT;
 }
 
-int main(void) {
+int main(int argc, char **argv) {
+
+	FILE *fp;
+	unsigned int address;
+	unsigned int opcode;
 
 	// Init our SAP Microcontroller:
 	sap_state_t *sap_state = init_sap_state();
@@ -349,16 +350,33 @@ int main(void) {
 		return 1;
 	}
 
-	//loadprog_lda_sta_5(sap_state);
-	//loadprog_call_ret(sap_state);
-	//loadprog_jnz_test(sap_state);
-	//loadprog_sign_test(sap_state);
-	//loadprog_zero_test(sap_state);
-	//loadprog_cma_test(sap_state);
-	//loadprog_rar_test(sap_state);
-	//loadprog_carry_test(sap_state);
-	//loadprog_700_plus_900(sap_state);
-	loadprog_inr_test(sap_state);
+	if (argc >= 2) {
+		// Open our file:
+		fp = fopen(argv[1], "r");
+		if(fp == NULL) {
+			printf("Unable to open file\n");
+			return 0;
+		}
+
+		while (!feof(fp)) {
+			while (fscanf(fp, "%x\t%x\n", &address, &opcode) != EOF) {
+				sap_state->ram[(uint16_t)address] = (uint8_t)opcode;
+				printf("Address: %x Opcode %x\n", address, opcode);
+			}
+		}
+		fclose(fp);
+	} else {
+		//loadprog_lda_sta_5(sap_state);
+		//loadprog_call_ret(sap_state);
+		//loadprog_jnz_test(sap_state);
+		//loadprog_sign_test(sap_state);
+		//loadprog_zero_test(sap_state);
+		//loadprog_cma_test(sap_state);
+		//loadprog_rar_test(sap_state);
+		//loadprog_carry_test(sap_state);
+		//loadprog_700_plus_900(sap_state);
+		loadprog_inr_test(sap_state);
+	}
 
 	printf("\nDumping memory before execution:\n");
 	dump_sap_memory(sap_state);
