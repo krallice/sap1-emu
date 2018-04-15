@@ -55,5 +55,5 @@ void dump_sap_memory(sap_state_t *sap_state);
 // Dump Structure State:
 void dump_sap_state(sap_state_t *sap_state);
 
-void execute_sap(sap_state_t *sap_state);
+void execute_sap(sap_state_t *sap_state, uint16_t hertz);
 #endif

@@ -338,11 +338,17 @@ void loadprog_inr_test(sap_state_t *sap_state) {
 	sap_state->ram[0x0006] = OPCODE_HLT;
 }
 
-int main(int argc, char **argv) {
+void print_usage(void) {
 
-	FILE *fp;
-	unsigned int address;
-	unsigned int opcode;
+	printf("sap3-emu: a SAP-3 Emulator\n");
+	printf("Usage: sap3-emu [-z hertz] [-b FILE] [-h] \n");
+	printf("Options:\n");
+	printf("\t-z Hertz\tRun CPU at hertz range between [1 - 100]\n");
+	printf("\t-b Bytecode\tExecute Bytecode COM file\n");
+	printf("\t-h\t\tPrint this help message and exit.\n");
+}
+
+int main(int argc, char **argv) {
 
 	// Init our SAP Microcontroller:
 	sap_state_t *sap_state = init_sap_state();
@@ -350,9 +356,36 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
-	if (argc >= 2) {
-		// Open our file:
-		fp = fopen(argv[1], "r");
+	int c;
+	char bytecode_filename[128];
+	uint16_t hertz = 5;
+
+	while ((c = getopt(argc, argv, "hb:z:")) != -1) {
+		switch(c) {
+			case 'h':
+				print_usage();
+				return 0;
+			case 'b':
+				strcpy(bytecode_filename, optarg);
+				break;
+			case 'z':
+				hertz = atoi(optarg);
+				break;
+			case '?':
+				if (optopt == 'b' || optopt == 'z') {
+					printf("Option -%c requires an argument.\n", optopt);
+				}
+				print_usage();
+				return 1;
+		}
+	}
+
+	FILE *fp;
+	unsigned int address;
+	unsigned int opcode;
+
+	if (strcmp(bytecode_filename, "") != 0) {
+		fp = fopen(bytecode_filename, "r");
 		if(fp == NULL) {
 			printf("Unable to open file\n");
 			return 0;
@@ -382,7 +415,7 @@ int main(int argc, char **argv) {
 	dump_sap_memory(sap_state);
 
 	// Execute SAP:
-	execute_sap(sap_state);
+	execute_sap(sap_state, hertz);
 
 	// Dump State:
 	printf("\nDumping SAP State ::\n");

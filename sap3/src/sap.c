@@ -69,10 +69,10 @@ void dump_sap_state(sap_state_t *sap_state) {
 }
 
 
-void execute_sap(sap_state_t *sap_state) {
+void execute_sap(sap_state_t *sap_state, uint16_t hertz) {
 
 	#if SAP_DEBUG
-	printf("\nStarting Main Execution Loop\n");
+	printf("\nStarting Main Execution Loop (%d Hz)\n", hertz);
 	#endif
 
 	while(1) {
@@ -584,7 +584,7 @@ void execute_sap(sap_state_t *sap_state) {
 				break;
 		}
 
-		usleep(10000);
+		usleep(1000000 / hertz);
 		//usleep(1000000);
 	}
 }
