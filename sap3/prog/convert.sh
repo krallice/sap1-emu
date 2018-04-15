@@ -4,4 +4,4 @@
 BFILE=${1%%.*}
 NEWEXT=".COM"
 
-cpp "$1" -imacros ../src/opcode.h -E -P | grep -v "^$" >> "$BFILE${NEWEXT}"
+cpp "$1" -imacros ../src/opcode.h -E -P | grep -v "^$" | grep -v "^//" >> "$BFILE${NEWEXT}"
