@@ -394,7 +394,6 @@ int main(int argc, char **argv) {
 		while (!feof(fp)) {
 			while (fscanf(fp, "%x\t%x\n", &address, &opcode) != EOF) {
 				sap_state->ram[(uint16_t)address] = (uint8_t)opcode;
-				printf("Address: %x Opcode %x\n", address, opcode);
 			}
 		}
 		fclose(fp);
