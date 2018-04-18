@@ -82,3 +82,7 @@ Register A (Accumulator): 0x05
 Register B:             0x00
 Program Counter:        0x03
 ```
+
+### License:
+
+SAP1/2/3 Licensed under the [GPLv2 License](./LICENSE).
