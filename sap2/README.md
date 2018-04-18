@@ -173,3 +173,7 @@ Zero Flag:              1
 Sign Flag:              0
 Program Counter:        0x000b
 ```
+
+### License:
+
+SAP1/2/3 Licensed under the [GPLv2 License](../LICENSE).
